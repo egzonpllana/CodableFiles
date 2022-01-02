@@ -69,7 +69,7 @@ pod 'CodableFiles'
 github "egzonpllana/CodableFiles"
 ```
 
-### Swift Package Manager
+### Swift Package Manager through Manifest File
 
 The [Swift Package Manager](https://swift.org/package-manager/) is a tool for automating the distribution of Swift code and is integrated into the `swift` compiler.
 
@@ -79,6 +79,12 @@ Once you have your Swift package set up, adding CodableFiles as a dependency is 
 dependencies: [
     .package(url: "https://github.com/egzonpllana/CodableFiles.git", .upToNextMajor(from: "0.1.5"))
 ]
+```
+
+### Swift Package Manager through XCode
+To add CodableFiles as a dependency to your Xcode project, select File > Swift Packages > Add Package Dependency and enter the repository URL
+```ogdl
+github "egzonpllana/CodableFiles"
 ```
 
 ### As a file
