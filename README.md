@@ -84,7 +84,7 @@ dependencies: [
 ### Swift Package Manager through XCode
 To add CodableFiles as a dependency to your Xcode project, select File > Swift Packages > Add Package Dependency and enter the repository URL
 ```ogdl
-github "egzonpllana/CodableFiles"
+https://github.com/egzonpllana/CodableFiles.git
 ```
 
 ### As a file
