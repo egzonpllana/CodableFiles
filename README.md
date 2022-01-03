@@ -71,15 +71,26 @@ if let filePath = Bundle.main.path(forResource: "user", ofType: "json"),
 }
 ```
 
-Delete specified directory folder with given name.
+Delete a file from default directory.
 ```swift
-try? codableFiles.deleteDirectory(directoryName: directoryName)
+try? codableFiles.deleteFile(withFileName: "userModel")
 ```
 
-Delete default directory folder.
+Delete a file from given directory.
+```swift
+try? codableFiles.deleteFile(withFileName: "userModel", atDirectory: "directoryName")
+```
+
+Delete default directory.
 ```swift
 try? codableFiles.deleteDirectory()
 ```
+
+Delete a directory.
+```swift
+try? codableFiles.deleteDirectory(directoryName: "directoryName")
+```
+
 ### App bundle
 AppBundle is Read-only, so you can not write anything to it programmatically. That's the reason we are using Documents Directory always to read & write data. Read more:
 https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html
