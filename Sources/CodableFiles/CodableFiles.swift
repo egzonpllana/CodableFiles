@@ -31,6 +31,7 @@ private enum SL: String {
     case fileDirectory = "file://"
     case myAppDirectory = "MyAppDirectory"
     case cfbundleName = "CFBundleName"
+    case dot = "."
 }
 
 // MARK: - CodableFiles
@@ -234,6 +235,30 @@ public extension CodableFiles {
         let decodedObject = try! decoder.decode(T.self, from: jsonData)
 
         return decodedObject
+    }
+
+    /// Delete file with given name at given directory.
+    /// Note: if directory name is not given, it try to delete from Documents folder.
+    /// - Parameters:
+    ///   - fileName: file name to delete without extension.
+    ///   - directoryName: directory name where the file is located.
+    func deleteFile(withFileName fileName: String, atDirectory directory: String?=nil) throws {
+        // Get default document directory path url
+        var pathUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+        let fullFileName = fileName + SL.dot.rawValue + SL.json.rawValue
+
+        // Check if we should delete specific directory
+        if let folderPath = directory {
+            let folderPath = pathUrl.appendingPathComponent(folderPath)
+            pathUrl = folderPath.appendingPathComponent(fullFileName)
+        } else {
+            pathUrl = pathUrl.appendingPathComponent(defaultDirectory).appendingPathComponent(fullFileName)
+        }
+
+        // Check if the directory to be deleted already exists
+        if fileManager.fileExists(atPath: pathUrl.path) {
+            try fileManager.removeItem(atPath: pathUrl.path)
+        }
     }
 
     /// Delete specific directory, if not specified it deletes the default document directory.

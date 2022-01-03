@@ -142,4 +142,26 @@ class CodableFilesTests: XCTestCase {
         let loadedObjects = optionalObjects!.compactMap({ $0 })
         XCTAssertEqual(objectsToSave.count, loadedObjects.count)
     }
+
+    /// Try deleting single file at default directory.
+    func testDeleteSingleFileFromDefaultDirectory() {
+        // Save file
+        let _ = try? sut.save(object: userModel, withFilename: SL.fileName.rawValue)
+        // Delete file
+        try? sut.deleteFile(withFileName: SL.fileName.rawValue)
+        // Check if deleted
+        let loadedObject = try? sut.load(objectType: User.self, withFilename: SL.fileName.rawValue)
+        XCTAssertNil(loadedObject)
+    }
+
+    /// Try deleting single file at given directory name.
+    func testDeleteSingleFileFromGivenDirectory() {
+        // Save file
+        let _ = try? sut.save(object: userModel, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        // Delete file
+        try? sut.deleteFile(withFileName: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        // Check if deleted
+        let loadedObject = try? sut.load(objectType: User.self, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        XCTAssertNil(loadedObject)
+    }
 }
