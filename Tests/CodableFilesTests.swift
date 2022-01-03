@@ -76,7 +76,8 @@ class CodableFilesTests: XCTestCase {
 
     /// Load json data from json file inside the Tests bundles
     func testLoadJSONFileFromBundle() {
-        let objectPath = Bundle.module.path(forResource: SL.userModelName.rawValue, ofType: SL.json.rawValue)!
+        let testBundle = Bundle(for: type(of: self))
+        let objectPath = testBundle.path(forResource: SL.userModelName.rawValue, ofType: SL.json.rawValue)!
         let objectPathURL = URL(string: objectPath)!
         let loadedObject = try? sut.load(objectType: User.self, atPath: objectPathURL)
         XCTAssertNotNil(loadedObject)
