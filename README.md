@@ -58,10 +58,31 @@ let anotherUser = User(name: "Another first name", lastName: "Another last name"
 let savePath = try? codableFiles.saveAsArray(objects: [user, anotherUser], withFilename: "usersArray")
 ```
 
-Load array Codable objects from default directory.
+Load array of Codable objects from default directory.
 ```swift
 let loadedObjects = try? codableFiles.loadAsArray(objectType: User.self, withFilename: "usersArray")
 ```
+
+Load Codable object from a file that is inside app bundle.
+```swift
+if let filePath = Bundle.main.path(forResource: "user", ofType: "json"),
+    let filePathUrl = URL(string: bundle) {
+    let loadedObject = try? codableFiles.load(objectType: User.self, atPath: filePathUrl)
+}
+```
+
+Delete specified directory folder with given name.
+```swift
+try? codableFiles.deleteDirectory(directoryName: directoryName)
+```
+
+Delete default directory folder.
+```swift
+try? codableFiles.deleteDirectory()
+```
+### App bundle
+AppBundle is Read-only, so you can not write anything to it programmatically. That's the reason we are using Documents Directory always to read & write data. Read more:
+https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html
 
 ## Installation
 
