@@ -60,9 +60,9 @@ public extension CodableFiles {
     /// Save Encodable Object.
     /// - Parameters:
     ///   - object: Encodable object.
-    ///   - filename: Object name.
+    ///   - filename: File name to save objects data.
     ///   - directory: Directory to save the object.
-    /// - Returns: Returns an optional directory URL.
+    /// - Returns: Returns an optional directory URL where file data is saved.
     func save(object: Encodable, withFilename filename: String, atDirectory directory: String?=nil) throws -> URL? {
         // Convert object to dictionary string
         let objectDictionary = try object.toDictionary()
@@ -94,7 +94,44 @@ public extension CodableFiles {
         return fileURL
     }
 
-    /// Load Encodable Object from Document Directory.
+    /// Save array of Encodable objects.
+    /// - Parameters:
+    ///   - objects: Encodable objects.
+    ///   - filename: File name to save objects data.
+    ///   - directory: directory to save the object.
+    /// - Returns: Returns an optional directory URL where file data is saved.
+    func saveAsArray(objects: [Encodable], withFilename filename: String, atDirectory directory: String?=nil) throws -> URL? {
+        // Convert object to dictionary string
+        let objectDictionary = try objects.map { try $0.toDictionary() }
+
+        // Get default document directory path url
+        var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+
+        // Check if its need to create a new directory
+        if let directory = directory {
+            let directoryUrl = documentDirectoryUrl.appendingPathComponent(directory)
+            documentDirectoryUrl = directoryUrl
+        } else {
+            let defaultDirectoryUrl = documentDirectoryUrl.appendingPathComponent(defaultDirectory)
+            documentDirectoryUrl = defaultDirectoryUrl
+        }
+
+        // Create the right directory if it does not exist, specified one or default one
+        if fileManager.fileExists(atPath: documentDirectoryUrl.path) == false {
+            try fileManager.createDirectory(at: documentDirectoryUrl, withIntermediateDirectories: false)
+        }
+
+        // Append file name to the directory path url
+        var fileURL = documentDirectoryUrl.appendingPathComponent(filename)
+        fileURL = fileURL.appendingPathExtension(SL.json.rawValue)
+
+        // Write data to file url
+        let data = try JSONSerialization.data(withJSONObject: objectDictionary, options: [.prettyPrinted])
+        try data.write(to: fileURL, options: [.atomicWrite])
+        return fileURL
+    }
+
+    /// Load object from Document Directory.
     /// - Parameters:
     ///   - objectType: Decodable object.
     ///   - filename: Object name.
@@ -127,6 +164,43 @@ public extension CodableFiles {
         // Decode data to Decodable object
         let decoder = JSONDecoder()
         let decodedObject = try! decoder.decode(T.self, from: jsonData)
+
+        return decodedObject
+    }
+
+    /// Load array of Encodable objects from Documents Directory.
+    /// - Parameters:
+    ///   - objectType: Decodable object.
+    ///   - filename: Object name.
+    ///   - directory: Directory to load data from.
+    /// - Returns: Returns optional Decodable object.
+    func loadAsArray<T: Decodable>(objectType type: T.Type, withFilename filename: String, atDirectory directory: String?=nil) throws -> [T?] {
+        // Get default document directory path url
+        var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+
+        // Check if its needed to use a specific directory
+        if let directory = directory {
+            documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(directory)
+        } else {
+            documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(defaultDirectory)
+        }
+
+        // Append file name to the directory path url
+        var fileURL = documentDirectoryUrl.appendingPathComponent(filename)
+        fileURL = fileURL.appendingPathExtension(SL.json.rawValue)
+
+        // Get data from path url
+        let contentData = try Data(contentsOf: fileURL)
+
+        // Get json object from data
+        let jsonObject = try JSONSerialization.jsonObject(with: contentData, options: [.mutableContainers, .mutableLeaves])
+
+        // Convert json object to data type
+        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+
+        // Decode data to Decodable object
+        let decoder = JSONDecoder()
+        let decodedObject = try! decoder.decode([T].self, from: jsonData)
 
         return decodedObject
     }

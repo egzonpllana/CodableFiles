@@ -27,7 +27,7 @@ import XCTest
 import CodableFiles
 
 // Enum for String literals
-enum SL: String {
+private enum SL: String {
     case testsDirectory = "TestsDirectory"
     case anotherTestsDirectory = "AnotherTestsDirectory"
     case bundleNameKey = "CFBundleName"
@@ -37,7 +37,8 @@ enum SL: String {
 }
 
 // User object with dummy data to be used for testing purpose.
-let userModel: User = User(firstName: "First name", lastName: "Last name")
+private let userModel: User = User(firstName: "First name", lastName: "Last name")
+private let anotherUserModel: User = User(firstName: "Another First name", lastName: "Another Last name")
 
 // MARK: - CodableFiles XCTestCase
 
@@ -123,11 +124,21 @@ class CodableFilesTests: XCTestCase {
         XCTAssertFalse(FileManager.default.fileExists(atPath: SL.testsDirectory.rawValue))
     }
 
-    /// Check if it will create a default directory name with
-    /// bundle name.
-    func testDefaultDirectoryIsBundleName() {
-        let savedPathURL = try? sut.save(object: userModel, withFilename: SL.fileName.rawValue)
-        let bundleName = Bundle.main.object(forInfoDictionaryKey: SL.bundleNameKey.rawValue) as! String
-        XCTAssertTrue(savedPathURL!.pathComponents.contains(bundleName))
+    /// Check if possible to save array of objects.
+    func testSaveArrayOfObjects() {
+        let objectsToSave = [userModel, anotherUserModel]
+        let savedPathURL = try? sut.saveAsArray(objects: objectsToSave, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        XCTAssertNotNil(savedPathURL)
+    }
+
+    /// Check if loaded objects count is same with saved objects count..
+    func testLoadArrayOfObjects() {
+        let objectsToSave = [userModel, anotherUserModel]
+        let savedPathURL = try? sut.saveAsArray(objects: objectsToSave, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        XCTAssertNotNil(savedPathURL)
+        let optionalObjects = try? sut.loadAsArray(objectType: User.self, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        XCTAssertNotNil(optionalObjects)
+        let loadedObjects = optionalObjects!.compactMap({ $0 })
+        XCTAssertEqual(objectsToSave.count, loadedObjects.count)
     }
 }
