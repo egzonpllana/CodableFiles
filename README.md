@@ -40,17 +40,29 @@ CodableFiles shared reference.
 let codableFiles = CodableFiles.shared
 ```
 
-Save Codable object at default directory.
+Save Codable object in default directory.
 ```swift
 let user = User(name: "First name", lastName: "Last name")
 let savePath = try? codableFiles.save(object: user, withFilename: "userModel")
 ```
 
 Load Codable object from default directory.
-
 ```swift
 let loadedObject = try? codableFiles.load(objectType: User.self, withFilename: "userModel")
 ```
+
+Save array of Codable objects in default directory.
+```swift
+let user = User(name: "First name", lastName: "Last name")
+let anotherUser = User(name: "Another first name", lastName: "Another last name")
+let savePath = try? codableFiles.saveAsArray(objects: [user, anotherUser], withFilename: "usersArray")
+```
+
+Load array Codable objects from default directory.
+```swift
+let loadedObjects = try? codableFiles.loadAsArray(objectType: User.self, withFilename: "usersArray")
+```
+
 ## Installation
 
 ### CocoaPods
