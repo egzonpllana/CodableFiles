@@ -93,7 +93,7 @@ Since all of CodableFiles is implemented within a single file, you can easily us
 
 ## Backstory
 
-So, why was this made? While I was working on a project to provide mocked URL sessions from dynamic JSON data, I found that we can have these JSON data as Codable files so later we can update, read or delete based on our app needs. So, I made **Codable Files** that make it possible to work with codable/json data quicker, in an expressive way.
+So, why was this made? While I was working on a project to provide mocked URL sessions with dynamic JSON data, I found that we can have these data saved in a file in Document Directory or loaded from Bundle so later we can update, read or delete based on our app needs. The objects that have to be saved or loaded must conform to the Codable protocol. So, I made **Codable Files** that make it possible to work with JSON data quicker, in an expressive way.
 
 ## Questions or feedback?
 
