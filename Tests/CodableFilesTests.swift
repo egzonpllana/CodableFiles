@@ -74,7 +74,13 @@ class CodableFilesTests: XCTestCase {
 
     // MARK: - Tests
 
-    /// Load json data from json file inside the Tests bundles
+    /// Text initialization shared instance.
+    func testInitialization() {
+        let codableFiles = CodableFiles.shared
+        XCTAssertNotNil(codableFiles)
+    }
+
+    /// Load json data from json file inside the Tests bundles.
     func testLoadJSONFileFromBundle() {
         let testBundle = Bundle(for: type(of: self))
         let objectPath = testBundle.path(forResource: SL.userModelName.rawValue, ofType: SL.json.rawValue)!
@@ -132,7 +138,7 @@ class CodableFilesTests: XCTestCase {
         XCTAssertNotNil(savedPathURL)
     }
 
-    /// Check if loaded objects count is same with saved objects count..
+    /// Check if loaded objects count is same with saved objects count.
     func testLoadArrayOfObjects() {
         let objectsToSave = [userModel, anotherUserModel]
         let savedPathURL = try? sut.saveAsArray(objects: objectsToSave, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
