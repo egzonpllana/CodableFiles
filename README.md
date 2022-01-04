@@ -22,7 +22,7 @@ Welcome to **CodableFiles**, a simple library that provides an easier way to sav
 - [X] Modern, object-oriented API for accessing, reading and writing files.
 - [X] Unified, simple `do, try, catch` error handling.
 - [X] Easily to find and interact with saved files.
-- [X] Unit tests for most of the use cases.
+- [X] Unit test coverage over 95%.
 
 ## Examples
 
@@ -121,7 +121,7 @@ Once you have your Swift package set up, adding CodableFiles as a dependency is 
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/egzonpllana/CodableFiles.git", .upToNextMajor(from: "0.1.7"))
+    .package(url: "https://github.com/egzonpllana/CodableFiles.git", .upToNextMajor(from: "0.1.8"))
 ]
 ```
 
