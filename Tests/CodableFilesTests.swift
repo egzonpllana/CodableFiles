@@ -32,7 +32,8 @@ private enum SL: String {
     case anotherTestsDirectory = "AnotherTestsDirectory"
     case bundleNameKey = "CFBundleName"
     case fileName = "userModel"
-    case userModelName = "UserModel"
+    case userJSONFileName = "User"
+    case usersArrayJSONFileName = "UsersArray"
     case json = "json"
 }
 
@@ -83,9 +84,17 @@ class CodableFilesTests: XCTestCase {
     /// Load json data from json file inside the Tests bundles.
     func testLoadJSONFileFromBundle() {
         let testBundle = Bundle(for: type(of: self))
-        let objectPath = testBundle.path(forResource: SL.userModelName.rawValue, ofType: SL.json.rawValue)!
+        let objectPath = testBundle.path(forResource: SL.userJSONFileName.rawValue, ofType: SL.json.rawValue)!
         let objectPathURL = URL(string: objectPath)!
         let loadedObject = try? sut.load(objectType: User.self, atPath: objectPathURL)
+        XCTAssertNotNil(loadedObject)
+    }
+
+    func testLoadJFONArrayFileFromBundle() {
+        let testBundle = Bundle(for: type(of: self))
+        let objectPath = testBundle.path(forResource: SL.usersArrayJSONFileName.rawValue, ofType: SL.json.rawValue)!
+        let objectPathURL = URL(string: objectPath)!
+        let loadedObject = try? sut.loadAsArray(objectType: User.self, atPath: objectPathURL)
         XCTAssertNotNil(loadedObject)
     }
 
