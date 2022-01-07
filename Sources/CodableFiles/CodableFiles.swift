@@ -164,7 +164,7 @@ public extension CodableFiles {
 
         // Decode data to Decodable object
         let decoder = JSONDecoder()
-        let decodedObject = try! decoder.decode(T.self, from: jsonData)
+        let decodedObject = try decoder.decode(T.self, from: jsonData)
 
         return decodedObject
     }
@@ -201,7 +201,7 @@ public extension CodableFiles {
 
         // Decode data to Decodable object
         let decoder = JSONDecoder()
-        let decodedObject = try! decoder.decode([T].self, from: jsonData)
+        let decodedObject = try decoder.decode([T].self, from: jsonData)
 
         return decodedObject
     }
@@ -232,7 +232,7 @@ public extension CodableFiles {
 
         // Decode data to Decodable object
         let decoder = JSONDecoder()
-        let decodedObject = try! decoder.decode(T.self, from: jsonData)
+        let decodedObject = try decoder.decode(T.self, from: jsonData)
 
         return decodedObject
     }
