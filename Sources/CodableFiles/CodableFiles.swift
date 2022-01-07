@@ -209,7 +209,7 @@ public extension CodableFiles {
     /// Load Encodable Object from specified path.
     /// - Parameters:
     ///   - objectType: Decodable object.
-    ///   - atPath: Path url to load the object from.
+    ///   - atPath: Path url to load the object from, ex. ".../user.json".
     /// - Returns: Returns optional Decodable object.
     func load<T: Decodable>(objectType type: T.Type, atPath path: URL) throws -> T? {
         // Check for valid path url
@@ -233,6 +233,38 @@ public extension CodableFiles {
         // Decode data to Decodable object
         let decoder = JSONDecoder()
         let decodedObject = try decoder.decode(T.self, from: jsonData)
+
+        return decodedObject
+    }
+
+
+    /// Load array of Encodable objects from specified path.
+    /// - Parameters:
+    ///   - objectType: Decodable object.
+    ///   - atPath: Path url to load the objects from, ex. ".../users.json".
+    /// - Returns: Returns array of optional Decodable objects.
+    func loadAsArray<T: Decodable>(objectType type: T.Type, atPath path: URL) throws -> [T?] {
+        // Check for valid path url
+        var path = path
+        if !path.pathComponents.contains(SL.fileDirectory.rawValue) {
+            let fullPath = SL.fileDirectory.rawValue + path.absoluteString
+            if let fullPathURL = URL(string: fullPath) {
+                path = fullPathURL
+            }
+        }
+
+        // Get data from path url
+        let contentData = try Data(contentsOf: path)
+
+        // Get json object from data
+        let jsonObject = try JSONSerialization.jsonObject(with: contentData, options: [.mutableContainers, .mutableLeaves])
+
+        // Convert json object to data type
+        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+
+        // Decode data to Decodable object
+        let decoder = JSONDecoder()
+        let decodedObject = try decoder.decode([T].self, from: jsonData)
 
         return decodedObject
     }
