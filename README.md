@@ -91,7 +91,7 @@ Delete a directory.
 try? codableFiles.deleteDirectory(directoryName: "directoryName")
 ```
 
-Copy a file from Bundle to default documents directoryy.
+Copy a file with given name from Bundle to default documents directory.
 ```swift
 try? sut.copyFileFromBundle(fileName: "user")
 ```
