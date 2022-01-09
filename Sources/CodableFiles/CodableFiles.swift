@@ -51,7 +51,13 @@ public final class CodableFiles {
 
     private init() {
         self.fileManager = FileManager.default
-        self.defaultDirectory = Bundle.main.object(forInfoDictionaryKey: SL.cfbundleName.rawValue) as? String ?? SL.myAppDirectory.rawValue
+
+        // Remove whitespaces from Bundle name.
+        if let bundleName = Bundle.main.object(forInfoDictionaryKey: SL.cfbundleName.rawValue) as? String {
+            self.defaultDirectory = bundleName.filter { !$0.isWhitespace }
+        } else {
+            self.defaultDirectory = SL.myAppDirectory.rawValue
+        }
     }
 }
 
