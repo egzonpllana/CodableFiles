@@ -38,12 +38,14 @@ private enum CFError: Error {
     case directoryNotFound
     case fileNotFoundInDocsDirectory
     case fileInBundleNotFound
+    case unableToCreateFullPath
 
     var debugDescription: String {
         switch self {
         case .directoryNotFound: return "Directory with given name not found."
         case .fileNotFoundInDocsDirectory: return "File with given name not found."
-        case.fileInBundleNotFound: return "File with given name not found in the current Bundle."
+        case .fileInBundleNotFound: return "File with given name not found in the current Bundle."
+        case .unableToCreateFullPath: return "Unable to create full path from given URL."
         }
     }
 }
@@ -235,10 +237,11 @@ public extension CodableFiles {
         // Check for valid path url.
         var path = path
         if !path.pathComponents.contains(SL.fileDirectory.rawValue) {
-            // TODO: Add throw error
             let fullPath = SL.fileDirectory.rawValue + path.absoluteString
             if let fullPathURL = URL(string: fullPath) {
                 path = fullPathURL
+            } else {
+                throw CFError.unableToCreateFullPath
             }
         }
 
@@ -267,10 +270,11 @@ public extension CodableFiles {
         // Check for valid path url.
         var path = path
         if !path.pathComponents.contains(SL.fileDirectory.rawValue) {
-            // TODO: Add throw error
             let fullPath = SL.fileDirectory.rawValue + path.absoluteString
             if let fullPathURL = URL(string: fullPath) {
                 path = fullPathURL
+            } else {
+                throw CFError.unableToCreateFullPath
             }
         }
 
