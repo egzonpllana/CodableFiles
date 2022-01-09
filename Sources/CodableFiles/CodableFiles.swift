@@ -37,11 +37,13 @@ private enum SL: String {
 private enum CFError: Error {
     case directoryNotFound
     case fileNotFoundInDocsDirectory
+    case fileInBundleNotFound
 
     var debugDescription: String {
         switch self {
         case .directoryNotFound: return "Directory with given name not found."
         case .fileNotFoundInDocsDirectory: return "File with given name not found."
+        case.fileInBundleNotFound: return "File with given name not found in the current Bundle."
         }
     }
 }
@@ -86,10 +88,10 @@ public extension CodableFiles {
         // Convert object to dictionary string
         let objectDictionary = try object.toDictionary()
 
-        // Get default document directory path url
+        // Get default document directory path url.
         var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
-        // Check if its need to create a new directory
+        // Check if its needed to append the new directory name.
         if let directory = directory {
             let directoryUrl = documentDirectoryUrl.appendingPathComponent(directory)
             documentDirectoryUrl = directoryUrl
@@ -98,16 +100,16 @@ public extension CodableFiles {
             documentDirectoryUrl = defaultDirectoryUrl
         }
 
-        // Create the right directory if it does not exist, specified one or default one
+        // Create the right directory if it does not exist, specified one or default one.
         if fileManager.fileExists(atPath: documentDirectoryUrl.path) == false {
             try fileManager.createDirectory(at: documentDirectoryUrl, withIntermediateDirectories: false)
         }
 
-        // Append file name to the directory path url
+        // Append file name to the directory path url.
         var fileURL = documentDirectoryUrl.appendingPathComponent(filename)
         fileURL = fileURL.appendingPathExtension(SL.json.rawValue)
 
-        // Write data to file url
+        // Write data to file url.
         let data = try JSONSerialization.data(withJSONObject: objectDictionary, options: [.prettyPrinted])
         try data.write(to: fileURL, options: [.atomicWrite])
         return fileURL
@@ -120,13 +122,13 @@ public extension CodableFiles {
     ///   - directory: directory to save the object.
     /// - Returns: Returns an optional directory URL where file data is saved.
     func saveAsArray(objects: [Encodable], withFilename filename: String, atDirectory directory: String?=nil) throws -> URL? {
-        // Convert object to dictionary string
+        // Convert object to dictionary string.
         let objectDictionary = try objects.map { try $0.toDictionary() }
 
-        // Get default document directory path url
+        // Get default document directory path url.
         var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
-        // Check if its need to create a new directory
+        // Check if its needed to append the new directory name.
         if let directory = directory {
             let directoryUrl = documentDirectoryUrl.appendingPathComponent(directory)
             documentDirectoryUrl = directoryUrl
@@ -135,16 +137,16 @@ public extension CodableFiles {
             documentDirectoryUrl = defaultDirectoryUrl
         }
 
-        // Create the right directory if it does not exist, specified one or default one
+        // Create the right directory if it does not exist, specified one or default one.
         if fileManager.fileExists(atPath: documentDirectoryUrl.path) == false {
             try fileManager.createDirectory(at: documentDirectoryUrl, withIntermediateDirectories: false)
         }
 
-        // Append file name to the directory path url
+        // Append file name to the directory path url.
         var fileURL = documentDirectoryUrl.appendingPathComponent(filename)
         fileURL = fileURL.appendingPathExtension(SL.json.rawValue)
 
-        // Write data to file url
+        // Write data to file url.
         let data = try JSONSerialization.data(withJSONObject: objectDictionary, options: [.prettyPrinted])
         try data.write(to: fileURL, options: [.atomicWrite])
         return fileURL
@@ -157,30 +159,30 @@ public extension CodableFiles {
     ///   - directory: Directory to load the object from.
     /// - Returns: Returns optional Decodable object.
     func load<T: Decodable>(objectType type: T.Type, withFilename filename: String, atDirectory directory: String?=nil) throws -> T? {
-        // Get default document directory path url
+        // Get default document directory path url.
         var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
-        // Check if its needed to use a specific directory
+        // Check if its needed to use a specific directory.
         if let directory = directory {
             documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(directory)
         } else {
             documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(defaultDirectory)
         }
 
-        // Append file name to the directory path url
+        // Append file name to the directory path url.
         var fileURL = documentDirectoryUrl.appendingPathComponent(filename)
         fileURL = fileURL.appendingPathExtension(SL.json.rawValue)
 
-        // Get data from path url
+        // Get data from path url.
         let contentData = try Data(contentsOf: fileURL)
 
-        // Get json object from data
+        // Get json object from data.
         let jsonObject = try JSONSerialization.jsonObject(with: contentData, options: [.mutableContainers, .mutableLeaves])
 
-        // Convert json object to data type
+        // Convert json object to data type.
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
 
-        // Decode data to Decodable object
+        // Decode data to Decodable object.
         let decoder = JSONDecoder()
         let decodedObject = try decoder.decode(T.self, from: jsonData)
 
@@ -194,30 +196,30 @@ public extension CodableFiles {
     ///   - directory: Directory to load data from.
     /// - Returns: Returns optional Decodable object.
     func loadAsArray<T: Decodable>(objectType type: T.Type, withFilename filename: String, atDirectory directory: String?=nil) throws -> [T?] {
-        // Get default document directory path url
+        // Get default document directory path url.
         var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
-        // Check if its needed to use a specific directory
+        // Check if its needed to use a specific directory.
         if let directory = directory {
             documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(directory)
         } else {
             documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(defaultDirectory)
         }
 
-        // Append file name to the directory path url
+        // Append file name to the directory path url.
         var fileURL = documentDirectoryUrl.appendingPathComponent(filename)
         fileURL = fileURL.appendingPathExtension(SL.json.rawValue)
 
-        // Get data from path url
+        // Get data from path url.
         let contentData = try Data(contentsOf: fileURL)
 
-        // Get json object from data
+        // Get json object from data.
         let jsonObject = try JSONSerialization.jsonObject(with: contentData, options: [.mutableContainers, .mutableLeaves])
 
-        // Convert json object to data type
+        // Convert json object to data type.
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
 
-        // Decode data to Decodable object
+        // Decode data to Decodable object.
         let decoder = JSONDecoder()
         let decodedObject = try decoder.decode([T].self, from: jsonData)
 
@@ -230,25 +232,26 @@ public extension CodableFiles {
     ///   - atPath: Path url to load the object from, ex. ".../user.json".
     /// - Returns: Returns optional Decodable object.
     func load<T: Decodable>(objectType type: T.Type, atPath path: URL) throws -> T? {
-        // Check for valid path url
+        // Check for valid path url.
         var path = path
         if !path.pathComponents.contains(SL.fileDirectory.rawValue) {
+            // TODO: Add throw error
             let fullPath = SL.fileDirectory.rawValue + path.absoluteString
             if let fullPathURL = URL(string: fullPath) {
                 path = fullPathURL
             }
         }
 
-        // Get data from path url
+        // Get data from path url.
         let contentData = try Data(contentsOf: path)
 
         // Get json object from data
         let jsonObject = try JSONSerialization.jsonObject(with: contentData, options: [.mutableContainers, .mutableLeaves])
 
-        // Convert json object to data type
+        // Convert json object to data type.
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
 
-        // Decode data to Decodable object
+        // Decode data to Decodable object.
         let decoder = JSONDecoder()
         let decodedObject = try decoder.decode(T.self, from: jsonData)
 
@@ -261,25 +264,26 @@ public extension CodableFiles {
     ///   - atPath: Path url to load the objects from, ex. ".../users.json".
     /// - Returns: Returns array of optional Decodable objects.
     func loadAsArray<T: Decodable>(objectType type: T.Type, atPath path: URL) throws -> [T?] {
-        // Check for valid path url
+        // Check for valid path url.
         var path = path
         if !path.pathComponents.contains(SL.fileDirectory.rawValue) {
+            // TODO: Add throw error
             let fullPath = SL.fileDirectory.rawValue + path.absoluteString
             if let fullPathURL = URL(string: fullPath) {
                 path = fullPathURL
             }
         }
 
-        // Get data from path url
+        // Get data from path url.
         let contentData = try Data(contentsOf: path)
 
-        // Get json object from data
+        // Get json object from data.
         let jsonObject = try JSONSerialization.jsonObject(with: contentData, options: [.mutableContainers, .mutableLeaves])
 
-        // Convert json object to data type
+        // Convert json object to data type.
         let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
 
-        // Decode data to Decodable object
+        // Decode data to Decodable object.
         let decoder = JSONDecoder()
         let decodedObject = try decoder.decode([T].self, from: jsonData)
 
@@ -292,11 +296,11 @@ public extension CodableFiles {
     ///   - fileName: file name to delete without extension.
     ///   - directoryName: directory name where the file is located.
     func deleteFile(withFileName fileName: String, atDirectory directory: String?=nil) throws {
-        // Get default document directory path url
+        // Get default document directory path url.
         var pathUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
         let fullFileName = fileName + SL.dot.rawValue + SL.json.rawValue
 
-        // Check if we should delete specific directory
+        // Check if we should delete specific directory.
         if let folderPath = directory {
             let folderPath = pathUrl.appendingPathComponent(folderPath)
             pathUrl = folderPath.appendingPathComponent(fullFileName)
@@ -304,7 +308,7 @@ public extension CodableFiles {
             pathUrl = pathUrl.appendingPathComponent(defaultDirectory).appendingPathComponent(fullFileName)
         }
 
-        // Check if the directory to be deleted already exists
+        // Check if the directory to be deleted already exists.
         if fileManager.fileExists(atPath: pathUrl.path) {
             try fileManager.removeItem(atPath: pathUrl.path)
         } else {
@@ -315,21 +319,51 @@ public extension CodableFiles {
     /// Delete specific directory, if not specified it deletes the default document directory.
     /// - Parameter name: Directory name to delete.
     func deleteDirectory(directoryName name: String?=nil) throws {
-        // Get default document directory path url
+        // Get default document directory path url.
         var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
-        // Check if we should delete specific directory
+        // Check if we should delete specific directory.
         if let path = name {
             documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(path)
         } else {
             documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(defaultDirectory)
         }
 
-        // Check if the directory to be deleted already exists
+        // Check if the directory to be deleted already exists.
         if fileManager.fileExists(atPath: documentDirectoryUrl.path) {
             try fileManager.removeItem(atPath: documentDirectoryUrl.path)
         } else {
             throw CFError.directoryNotFound
+        }
+    }
+
+    func copyFileFromBundle(bundle: Bundle?=Bundle.main, fileName: String, toDirectory directory: String?=nil) throws {
+        if let bundlePath = bundle?.url(forResource: fileName, withExtension: SL.json.rawValue) {
+            // Get default document directory path url.
+            var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+            
+            // Check if its needed to append the new directory name.
+            if let directory = directory {
+                let directoryUrl = documentDirectoryUrl.appendingPathComponent(directory)
+                documentDirectoryUrl = directoryUrl
+            } else {
+                let defaultDirectoryUrl = documentDirectoryUrl.appendingPathComponent(defaultDirectory)
+                documentDirectoryUrl = defaultDirectoryUrl
+            }
+
+            // Create the right directory if it does not exist, specified one or default one.
+            if fileManager.fileExists(atPath: documentDirectoryUrl.path) == false {
+                try fileManager.createDirectory(at: documentDirectoryUrl, withIntermediateDirectories: false)
+            }
+
+            // Append file name
+            let fileName = fileName + SL.dot.rawValue + SL.json.rawValue
+            documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(fileName)
+
+            // Copy file from bundle to documents directory.
+            try fileManager.copyItem(at: bundlePath, to: documentDirectoryUrl)
+        } else {
+            throw CFError.fileInBundleNotFound
         }
     }
 

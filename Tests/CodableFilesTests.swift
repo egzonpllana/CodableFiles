@@ -180,4 +180,17 @@ class CodableFilesTests: XCTestCase {
         let loadedObject = try? sut.load(objectType: User.self, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
         XCTAssertNil(loadedObject)
     }
+
+    func testCopyFileFromBundleToDefaultDirectory() {
+        // Filename.
+        let fileName = SL.userJSONFileName.rawValue
+        // Test bundle.
+        let testBundle = Bundle(for: type(of: self))
+        // Copy file.
+        try? sut.copyFileFromBundle(bundle: testBundle, fileName: fileName)
+        // Try to load copied file.
+        let loadedObject = try? sut.load(objectType: User.self, withFilename: fileName)
+        // Check if file is copied and loaded successfuly.
+        XCTAssertNotNil(loadedObject)
+    }
 }
