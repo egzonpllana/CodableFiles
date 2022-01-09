@@ -75,7 +75,7 @@ class CodableFilesTests: XCTestCase {
 
     // MARK: - Tests
 
-    /// Text initialization shared instance.
+    /// Test initialization shared instance.
     func testInitialization() {
         let codableFiles = CodableFiles.shared
         XCTAssertNotNil(codableFiles)
@@ -90,6 +90,7 @@ class CodableFilesTests: XCTestCase {
         XCTAssertNotNil(loadedObject)
     }
 
+    /// Load JSON array of data from bundle file.
     func testLoadJFONArrayFileFromBundle() {
         let testBundle = Bundle(for: type(of: self))
         let objectPath = testBundle.path(forResource: SL.usersArrayJSONFileName.rawValue, ofType: SL.json.rawValue)!
