@@ -34,6 +34,18 @@ private enum SL: String {
     case dot = "."
 }
 
+private enum CFError: Error {
+    case directoryNotFound
+    case fileNotFoundInDocsDirectory
+
+    var debugDescription: String {
+        switch self {
+        case .directoryNotFound: return "Directory with given name not found."
+        case .fileNotFoundInDocsDirectory: return "File with given name not found."
+        }
+    }
+}
+
 // MARK: - CodableFiles
 
 public final class CodableFiles {
@@ -243,7 +255,6 @@ public extension CodableFiles {
         return decodedObject
     }
 
-
     /// Load array of Encodable objects from specified path.
     /// - Parameters:
     ///   - objectType: Decodable object.
@@ -296,6 +307,8 @@ public extension CodableFiles {
         // Check if the directory to be deleted already exists
         if fileManager.fileExists(atPath: pathUrl.path) {
             try fileManager.removeItem(atPath: pathUrl.path)
+        } else {
+            throw CFError.fileNotFoundInDocsDirectory
         }
     }
 
@@ -315,6 +328,8 @@ public extension CodableFiles {
         // Check if the directory to be deleted already exists
         if fileManager.fileExists(atPath: documentDirectoryUrl.path) {
             try fileManager.removeItem(atPath: documentDirectoryUrl.path)
+        } else {
+            throw CFError.directoryNotFound
         }
     }
 
