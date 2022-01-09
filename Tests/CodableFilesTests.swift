@@ -209,6 +209,7 @@ class CodableFilesTests: XCTestCase {
         XCTAssertNotNil(loadedObject)
     }
 
+    /// Test debugDescription for CodableFile error enumeration.
     func testCFErrordebugDescription() {
         let directoryNotFound = CodableFilesError.directoryNotFound
         XCTAssertNotNil(directoryNotFound.debugDescription)
