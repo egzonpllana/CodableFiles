@@ -181,6 +181,7 @@ class CodableFilesTests: XCTestCase {
         XCTAssertNil(loadedObject)
     }
 
+    /// Try to copy file from bundle with given file name.
     func testCopyFileFromBundleToDefaultDirectory() {
         // Filename.
         let fileName = SL.userJSONFileName.rawValue
@@ -192,5 +193,33 @@ class CodableFilesTests: XCTestCase {
         let loadedObject = try? sut.load(objectType: User.self, withFilename: fileName)
         // Check if file is copied and loaded successfuly.
         XCTAssertNotNil(loadedObject)
+    }
+
+    /// Try to copy file from bundle with given file name.
+    func testCopyFileFromBundleToGivenDirectory() {
+        // Filename.
+        let fileName = SL.userJSONFileName.rawValue
+        // Test bundle.
+        let testBundle = Bundle(for: type(of: self))
+        // Copy file.
+        try? sut.copyFileFromBundle(bundle: testBundle, fileName: fileName, toDirectory: SL.testsDirectory.rawValue)
+        // Try to load copied file.
+        let loadedObject = try? sut.load(objectType: User.self, withFilename: fileName, atDirectory: SL.testsDirectory.rawValue)
+        // Check if file is copied and loaded successfuly.
+        XCTAssertNotNil(loadedObject)
+    }
+
+    func testCFErrordebugDescription() {
+        let directoryNotFound = CodableFilesError.directoryNotFound
+        XCTAssertNotNil(directoryNotFound.debugDescription)
+
+        let fileNotFoundInDocsDirectory = CodableFilesError.fileNotFoundInDocsDirectory
+        XCTAssertNotNil(fileNotFoundInDocsDirectory.debugDescription)
+
+        let fileInBundleNotFound = CodableFilesError.fileInBundleNotFound
+        XCTAssertNotNil(fileInBundleNotFound.debugDescription)
+
+        let unableToCreateFullPath = CodableFilesError.unableToCreateFullPath
+        XCTAssertNotNil(unableToCreateFullPath.debugDescription)
     }
 }
