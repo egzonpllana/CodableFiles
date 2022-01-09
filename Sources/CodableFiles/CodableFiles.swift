@@ -341,6 +341,11 @@ public extension CodableFiles {
         }
     }
 
+    /// Copy file with given name from a Bundle to documents directory.
+    /// - Parameters:
+    ///   - bundle: Bundle to copy files from.
+    ///   - fileName: File name to copy.
+    ///   - directory: Directory to save file to.
     func copyFileFromBundle(bundle: Bundle?=Bundle.main, fileName: String, toDirectory directory: String?=nil) throws {
         if let bundlePath = bundle?.url(forResource: fileName, withExtension: SL.json.rawValue) {
             // Get default document directory path url.
