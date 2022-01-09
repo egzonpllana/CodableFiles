@@ -91,6 +91,11 @@ Delete a directory.
 try? codableFiles.deleteDirectory(directoryName: "directoryName")
 ```
 
+Copy a file from Bundle to default documents directoryy.
+```swift
+try? sut.copyFileFromBundle(fileName: "user")
+```
+
 ### App bundle
 AppBundle is Read-only, so you can not write anything to it programmatically. That's the reason we are using Documents Directory always to read & write data. Read more:
 https://developer.apple.com/library/archive/documentation/FileManagement/Conceptual/FileSystemProgrammingGuide/FileSystemOverview/FileSystemOverview.html
