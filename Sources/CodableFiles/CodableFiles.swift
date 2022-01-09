@@ -34,13 +34,13 @@ private enum SL: String {
     case dot = "."
 }
 
-private enum CFError: Error {
+public enum CodableFilesError: Error {
     case directoryNotFound
     case fileNotFoundInDocsDirectory
     case fileInBundleNotFound
     case unableToCreateFullPath
 
-    var debugDescription: String {
+    public var debugDescription: String {
         switch self {
         case .directoryNotFound: return "Directory with given name not found."
         case .fileNotFoundInDocsDirectory: return "File with given name not found."
@@ -241,7 +241,7 @@ public extension CodableFiles {
             if let fullPathURL = URL(string: fullPath) {
                 path = fullPathURL
             } else {
-                throw CFError.unableToCreateFullPath
+                throw CodableFilesError.unableToCreateFullPath
             }
         }
 
@@ -274,7 +274,7 @@ public extension CodableFiles {
             if let fullPathURL = URL(string: fullPath) {
                 path = fullPathURL
             } else {
-                throw CFError.unableToCreateFullPath
+                throw CodableFilesError.unableToCreateFullPath
             }
         }
 
@@ -316,7 +316,7 @@ public extension CodableFiles {
         if fileManager.fileExists(atPath: pathUrl.path) {
             try fileManager.removeItem(atPath: pathUrl.path)
         } else {
-            throw CFError.fileNotFoundInDocsDirectory
+            throw CodableFilesError.fileNotFoundInDocsDirectory
         }
     }
 
@@ -337,7 +337,7 @@ public extension CodableFiles {
         if fileManager.fileExists(atPath: documentDirectoryUrl.path) {
             try fileManager.removeItem(atPath: documentDirectoryUrl.path)
         } else {
-            throw CFError.directoryNotFound
+            throw CodableFilesError.directoryNotFound
         }
     }
 
@@ -367,7 +367,7 @@ public extension CodableFiles {
             // Copy file from bundle to documents directory.
             try fileManager.copyItem(at: bundlePath, to: documentDirectoryUrl)
         } else {
-            throw CFError.fileInBundleNotFound
+            throw CodableFilesError.fileInBundleNotFound
         }
     }
 
