@@ -1,7 +1,7 @@
 /**
-* MIT License
+ * MIT License
 
-* Copyright (c) 2022 Egzon Pllana
+ * Copyright (c) 2022 Egzon Pllana
 
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,7 @@
  * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
  * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
  * SOFTWARE.
-*/
+ */
 
 import Foundation
 import XCTest
@@ -82,42 +82,42 @@ class CodableFilesTests: XCTestCase {
     }
 
     /// Load json data from json file inside the Tests bundles.
-    func testLoadJSONFileFromBundle() {
+    func testLoadJSONFileFromBundle() throws {
         let testBundle = Bundle(for: type(of: self))
         let objectPath = testBundle.path(forResource: SL.userJSONFileName.rawValue, ofType: SL.json.rawValue)!
         let objectPathURL = URL(string: objectPath)!
-        let loadedObject = try? sut.load(objectType: User.self, atPath: objectPathURL)
-        XCTAssertNotNil(loadedObject)
+        let savedPath = try sut.load(objectType: User.self, atPath: objectPathURL)
+        XCTAssertNotNil(savedPath)
     }
 
     /// Load JSON array of data from bundle file.
-    func testLoadJFONArrayFileFromBundle() {
+    func testLoadJSONArrayFileFromBundle() throws {
         let testBundle = Bundle(for: type(of: self))
         let objectPath = testBundle.path(forResource: SL.usersArrayJSONFileName.rawValue, ofType: SL.json.rawValue)!
         let objectPathURL = URL(string: objectPath)!
-        let loadedObject = try? sut.loadAsArray(objectType: User.self, atPath: objectPathURL)
+        let loadedObject = try sut.loadAsArray(objectType: User.self, atPath: objectPathURL)
         XCTAssertNotNil(loadedObject)
     }
 
     /// Save file without providing a directory name
     /// Will use the default one.
-    func testSaveFileToDefaultDirectory() {
-        let savedPathURL = try? sut.save(object: userModel, withFilename: SL.fileName.rawValue)
+    func testSaveFileToDefaultDirectory() throws {
+        let savedPathURL = try sut.save(object: userModel, withFilename: SL.fileName.rawValue)
         XCTAssertNotNil(savedPathURL)
     }
 
     /// Load file without providing a directory name
     /// Will use the default one.
-    func testLoadFileFromDefaultDirectory() {
-        let _ = try? sut.save(object: userModel, withFilename: SL.fileName.rawValue)
-        let loadedObject = try? sut.load(objectType: User.self, withFilename: SL.fileName.rawValue)
+    func testLoadFileFromDefaultDirectory() throws {
+        let _ = try sut.save(object: userModel, withFilename: SL.fileName.rawValue)
+        let loadedObject = try sut.load(objectType: User.self, withFilename: SL.fileName.rawValue)
         XCTAssertNotNil(loadedObject)
     }
 
     /// Check if saved files without providing a directory name
     /// are saved in a default directory.
-    func testSavedFileAreInDefaultDirectory() {
-        let savedPathURL = try? sut.save(object: userModel, withFilename: SL.fileName.rawValue)
+    func testSavedFileAreInDefaultDirectory() throws {
+        let savedPathURL = try sut.save(object: userModel, withFilename: SL.fileName.rawValue)
         XCTAssertTrue(savedPathURL!.pathComponents.contains(sut.defaultDirectoryName))
     }
 
@@ -128,85 +128,74 @@ class CodableFilesTests: XCTestCase {
     }
 
     /// Delete default directory without providing directory name.
-    func testDeleteDefaultDirectory() {
-        let _ = try? sut.save(object: userModel, withFilename: SL.fileName.rawValue)
-        try? sut.deleteDirectory()
+    func testDeleteDefaultDirectory() throws {
+        let _ = try sut.save(object: userModel, withFilename: SL.fileName.rawValue)
+        try sut.deleteDirectory()
         XCTAssertFalse(FileManager.default.fileExists(atPath: sut.defaultDirectoryName))
     }
 
     /// Delete a directory with provided directory name.
-    func testDeleteSpecificDirectory() {
-        let _ = try? sut.save(object: userModel, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
-        try? sut.deleteDirectory(directoryName: SL.testsDirectory.rawValue)
+    func testDeleteSpecificDirectory() throws {
+        let _ = try sut.save(object: userModel, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        try sut.deleteDirectory(directoryName: SL.testsDirectory.rawValue)
         XCTAssertFalse(FileManager.default.fileExists(atPath: SL.testsDirectory.rawValue))
     }
 
     /// Check if possible to save array of objects.
-    func testSaveArrayOfObjects() {
+    func testSaveArrayOfObjects() throws {
         let objectsToSave = [userModel, anotherUserModel]
-        let savedPathURL = try? sut.saveAsArray(objects: objectsToSave, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        let savedPathURL = try sut.saveAsArray(objects: objectsToSave, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
         XCTAssertNotNil(savedPathURL)
     }
 
     /// Check if loaded objects count is same with saved objects count.
-    func testLoadArrayOfObjects() {
+    func testLoadArrayOfObjects() throws  {
         let objectsToSave = [userModel, anotherUserModel]
-        let savedPathURL = try? sut.saveAsArray(objects: objectsToSave, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        let savedPathURL = try sut.saveAsArray(objects: objectsToSave, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
         XCTAssertNotNil(savedPathURL)
-        let optionalObjects = try? sut.loadAsArray(objectType: User.self, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
-        XCTAssertNotNil(optionalObjects)
-        let loadedObjects = optionalObjects!.compactMap({ $0 })
+        let optionalObjects = try sut.loadAsArray(objectType: User.self, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        let loadedObjects = optionalObjects.compactMap({ $0 })
         XCTAssertEqual(objectsToSave.count, loadedObjects.count)
     }
 
     /// Try deleting single file at default directory.
-    func testDeleteSingleFileFromDefaultDirectory() {
+    func testDeleteSingleFileFromDefaultDirectory() throws {
         // Save file
-        let _ = try? sut.save(object: userModel, withFilename: SL.fileName.rawValue)
+        let _ = try sut.save(object: userModel, withFilename: SL.fileName.rawValue)
         // Delete file
-        try? sut.deleteFile(withFileName: SL.fileName.rawValue)
-        // Check if deleted
-        let loadedObject = try? sut.load(objectType: User.self, withFilename: SL.fileName.rawValue)
-        XCTAssertNil(loadedObject)
+        try sut.deleteFile(withFileName: SL.fileName.rawValue)
     }
 
     /// Try deleting single file at given directory name.
-    func testDeleteSingleFileFromGivenDirectory() {
+    func testDeleteSingleFileFromGivenDirectory() throws {
         // Save file
-        let _ = try? sut.save(object: userModel, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
+        let _ = try sut.save(object: userModel, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
         // Delete file
-        try? sut.deleteFile(withFileName: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
-        // Check if deleted
-        let loadedObject = try? sut.load(objectType: User.self, withFilename: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
-        XCTAssertNil(loadedObject)
+        try sut.deleteFile(withFileName: SL.fileName.rawValue, atDirectory: SL.testsDirectory.rawValue)
     }
 
     /// Try to copy file from bundle with given file name.
-    func testCopyFileFromBundleToDefaultDirectory() {
+    func testCopyFileFromBundleToDefaultDirectory() throws {
         // Filename.
         let fileName = SL.userJSONFileName.rawValue
         // Test bundle.
         let testBundle = Bundle(for: type(of: self))
         // Copy file.
-        try? sut.copyFileFromBundle(bundle: testBundle, fileName: fileName)
-        // Try to load copied file.
-        let loadedObject = try? sut.load(objectType: User.self, withFilename: fileName)
-        // Check if file is copied and loaded successfuly.
-        XCTAssertNotNil(loadedObject)
+        let savedPathURL = try sut.copyFileFromBundle(bundle: testBundle, fileName: fileName)
+        // Check if file is copied.
+        XCTAssertNotNil(savedPathURL)
     }
 
     /// Try to copy file from bundle with given file name.
-    func testCopyFileFromBundleToGivenDirectory() {
+    func testCopyFileFromBundleToGivenDirectory() throws {
         // Filename.
         let fileName = SL.userJSONFileName.rawValue
         // Test bundle.
         let testBundle = Bundle(for: type(of: self))
         // Copy file.
-        try? sut.copyFileFromBundle(bundle: testBundle, fileName: fileName, toDirectory: SL.testsDirectory.rawValue)
-        // Try to load copied file.
-        let loadedObject = try? sut.load(objectType: User.self, withFilename: fileName, atDirectory: SL.testsDirectory.rawValue)
-        // Check if file is copied and loaded successfuly.
-        XCTAssertNotNil(loadedObject)
+        let savedPathURL = try sut.copyFileFromBundle(bundle: testBundle, fileName: fileName, toDirectory: SL.testsDirectory.rawValue)
+        // Check if file is copied.
+        XCTAssertNotNil(savedPathURL)
     }
 
     /// Test debugDescription for CodableFiles error enumeration.
