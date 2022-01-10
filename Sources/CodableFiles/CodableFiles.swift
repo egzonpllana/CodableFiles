@@ -233,32 +233,27 @@ public extension CodableFiles {
     ///   - objectType: Decodable object.
     ///   - atPath: Path url to load the object from, ex. ".../user.json".
     /// - Returns: Returns optional Decodable object.
-    func load<T: Decodable>(objectType type: T.Type, atPath path: URL) throws -> T? {
-        // Check for valid path url.
-        var path = path
-        if !path.pathComponents.contains(SL.fileDirectory.rawValue) {
-            let fullPath = SL.fileDirectory.rawValue + path.absoluteString
-            if let fullPathURL = URL(string: fullPath) {
-                path = fullPathURL
-            } else {
-                throw CodableFilesError.unableToCreateFullPath
-            }
+    func load<T: Decodable>(fromBundle bundle: Bundle?=Bundle.main, objectType type: T.Type, fileName: String) throws -> T? {
+        if let bundlePath = bundle?.url(forResource: fileName, withExtension: SL.json.rawValue) {
+
+            // Get data from path url.
+            let contentData = try Data(contentsOf: bundlePath)
+
+            // Get json object from data
+            let jsonObject = try JSONSerialization.jsonObject(with: contentData, options: [.mutableContainers, .mutableLeaves])
+
+            // Convert json object to data type.
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+
+            // Decode data to Decodable object.
+            let decoder = JSONDecoder()
+            let decodedObject = try decoder.decode(T.self, from: jsonData)
+
+            return decodedObject
+        } else {
+            throw CodableFilesError.fileInBundleNotFound
+
         }
-
-        // Get data from path url.
-        let contentData = try Data(contentsOf: path)
-
-        // Get json object from data
-        let jsonObject = try JSONSerialization.jsonObject(with: contentData, options: [.mutableContainers, .mutableLeaves])
-
-        // Convert json object to data type.
-        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
-
-        // Decode data to Decodable object.
-        let decoder = JSONDecoder()
-        let decodedObject = try decoder.decode(T.self, from: jsonData)
-
-        return decodedObject
     }
 
     /// Load array of Encodable objects from specified path.
@@ -266,32 +261,25 @@ public extension CodableFiles {
     ///   - objectType: Decodable object.
     ///   - atPath: Path url to load the objects from, ex. ".../users.json".
     /// - Returns: Returns array of optional Decodable objects.
-    func loadAsArray<T: Decodable>(objectType type: T.Type, atPath path: URL) throws -> [T?] {
-        // Check for valid path url.
-        var path = path
-        if !path.pathComponents.contains(SL.fileDirectory.rawValue) {
-            let fullPath = SL.fileDirectory.rawValue + path.absoluteString
-            if let fullPathURL = URL(string: fullPath) {
-                path = fullPathURL
-            } else {
-                throw CodableFilesError.unableToCreateFullPath
-            }
+    func loadAsArray<T: Decodable>(fromBundle bundle: Bundle?=Bundle.main, objectType type: T.Type, fileName: String) throws -> [T?] {
+        if let bundlePath = bundle?.url(forResource: fileName, withExtension: SL.json.rawValue) {
+            // Get data from path url.
+            let contentData = try Data(contentsOf: bundlePath)
+
+            // Get json object from data.
+            let jsonObject = try JSONSerialization.jsonObject(with: contentData, options: [.mutableContainers, .mutableLeaves])
+
+            // Convert json object to data type.
+            let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
+
+            // Decode data to Decodable object.
+            let decoder = JSONDecoder()
+            let decodedObject = try decoder.decode([T].self, from: jsonData)
+
+            return decodedObject
+        } else {
+            throw CodableFilesError.fileInBundleNotFound
         }
-
-        // Get data from path url.
-        let contentData = try Data(contentsOf: path)
-
-        // Get json object from data.
-        let jsonObject = try JSONSerialization.jsonObject(with: contentData, options: [.mutableContainers, .mutableLeaves])
-
-        // Convert json object to data type.
-        let jsonData = try JSONSerialization.data(withJSONObject: jsonObject, options: [])
-
-        // Decode data to Decodable object.
-        let decoder = JSONDecoder()
-        let decodedObject = try decoder.decode([T].self, from: jsonData)
-
-        return decodedObject
     }
 
     /// Delete file with given name at given directory.

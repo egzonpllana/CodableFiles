@@ -84,19 +84,15 @@ class CodableFilesTests: XCTestCase {
     /// Load json data from json file inside the Tests bundles.
     func testLoadJSONFileFromBundle() throws {
         let testBundle = Bundle(for: type(of: self))
-        let objectPath = testBundle.path(forResource: SL.userJSONFileName.rawValue, ofType: SL.json.rawValue)!
-        let objectPathURL = URL(string: objectPath)!
-        let savedPath = try sut.load(objectType: User.self, atPath: objectPathURL)
-        XCTAssertNotNil(savedPath)
+        let loadPath = try sut.load(fromBundle: testBundle, objectType: User.self, fileName: SL.userJSONFileName.rawValue)
+        XCTAssertNotNil(loadPath)
     }
 
     /// Load JSON array of data from bundle file.
     func testLoadJSONArrayFileFromBundle() throws {
         let testBundle = Bundle(for: type(of: self))
-        let objectPath = testBundle.path(forResource: SL.usersArrayJSONFileName.rawValue, ofType: SL.json.rawValue)!
-        let objectPathURL = URL(string: objectPath)!
-        let loadedObject = try sut.loadAsArray(objectType: User.self, atPath: objectPathURL)
-        XCTAssertNotNil(loadedObject)
+        let loadPath = try sut.loadAsArray(fromBundle: testBundle, objectType: User.self, fileName: SL.usersArrayJSONFileName.rawValue)
+        XCTAssertNotNil(loadPath)
     }
 
     /// Save file without providing a directory name
