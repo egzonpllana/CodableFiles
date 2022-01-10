@@ -335,6 +335,7 @@ public extension CodableFiles {
 
         // Check if the directory to be deleted already exists.
         if fileManager.fileExists(atPath: documentDirectoryUrl.path) {
+            // TODO: is throwing error in Tests
             try fileManager.removeItem(atPath: documentDirectoryUrl.path)
         } else {
             throw CodableFilesError.directoryNotFound
@@ -346,7 +347,7 @@ public extension CodableFiles {
     ///   - bundle: Bundle to copy files from.
     ///   - fileName: File name to copy.
     ///   - directory: Directory to save file to.
-    func copyFileFromBundle(bundle: Bundle?=Bundle.main, fileName: String, toDirectory directory: String?=nil) throws {
+    func copyFileFromBundle(bundle: Bundle?=Bundle.main, fileName: String, toDirectory directory: String?=nil) throws -> URL? {
         if let bundlePath = bundle?.url(forResource: fileName, withExtension: SL.json.rawValue) {
             // Get default document directory path url.
             var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
@@ -369,8 +370,15 @@ public extension CodableFiles {
             let fileName = fileName + SL.dot.rawValue + SL.json.rawValue
             documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(fileName)
 
-            // Copy file from bundle to documents directory.
-            try fileManager.copyItem(at: bundlePath, to: documentDirectoryUrl)
+            // Replace file if already exists
+            if fileManager.fileExists(atPath: documentDirectoryUrl.path) == true {
+                let savedPath = try fileManager.replaceItemAt(documentDirectoryUrl, withItemAt: bundlePath)
+                return savedPath
+            } else {
+                // Copy file from bundle to documents directory.
+                try fileManager.copyItem(at: bundlePath, to: documentDirectoryUrl)
+                return documentDirectoryUrl
+            }
         } else {
             throw CodableFilesError.fileInBundleNotFound
         }
