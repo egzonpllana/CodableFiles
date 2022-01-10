@@ -126,7 +126,7 @@ Once you have your Swift package set up, adding CodableFiles as a dependency is 
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/egzonpllana/CodableFiles.git", .upToNextMajor(from: "0.1.10"))
+    .package(url: "https://github.com/egzonpllana/CodableFiles.git", .upToNextMajor(from: "1.0.0"))
 ]
 ```
 
