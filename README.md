@@ -65,10 +65,7 @@ let loadedObjects = try? codableFiles.loadAsArray(objectType: User.self, withFil
 
 Load Codable object from a file that is inside app bundle.
 ```swift
-if let filePath = Bundle.main.path(forResource: "user", ofType: "json"),
-    let filePathUrl = URL(string: bundle) {
-    let loadedObject = try? codableFiles.load(objectType: User.self, atPath: filePathUrl)
-}
+let loadedObject = try codableFiles.load(objectType: User.self, fileName: "userModel")
 ```
 
 Delete a file from default directory.
