@@ -90,7 +90,7 @@ try? codableFiles.deleteDirectory(directoryName: "directoryName")
 
 Copy a file with given name from Bundle to default documents directory.
 ```swift
-try? codableFiles.copyFileFromBundle(fileName: "user")
+let savedPath = try? codableFiles.copyFileFromBundle(fileName: "user")
 ```
 
 ### App bundle
@@ -123,7 +123,7 @@ Once you have your Swift package set up, adding CodableFiles as a dependency is 
 
 ```swift
 dependencies: [
-    .package(url: "https://github.com/egzonpllana/CodableFiles.git", .upToNextMajor(from: "1.0.0"))
+    .package(url: "https://github.com/egzonpllana/CodableFiles.git", .upToNextMajor(from: "1.0.1"))
 ]
 ```
 
