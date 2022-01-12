@@ -252,7 +252,6 @@ public extension CodableFiles {
             return decodedObject
         } else {
             throw CodableFilesError.fileInBundleNotFound
-
         }
     }
 
@@ -323,7 +322,6 @@ public extension CodableFiles {
 
         // Check if the directory to be deleted already exists.
         if fileManager.fileExists(atPath: documentDirectoryUrl.path) {
-            // TODO: is throwing error in Tests
             try fileManager.removeItem(atPath: documentDirectoryUrl.path)
         } else {
             throw CodableFilesError.directoryNotFound
@@ -360,13 +358,13 @@ public extension CodableFiles {
 
             // Replace file if already exists
             if fileManager.fileExists(atPath: documentDirectoryUrl.path) == true {
-                let savedPath = try fileManager.replaceItemAt(documentDirectoryUrl, withItemAt: bundlePath)
-                return savedPath
-            } else {
-                // Copy file from bundle to documents directory.
-                try fileManager.copyItem(at: bundlePath, to: documentDirectoryUrl)
-                return documentDirectoryUrl
+                // Delete existing file
+                try fileManager.removeItem(at: documentDirectoryUrl)
             }
+            
+            // Copy file from bundle to documents directory.
+            try fileManager.copyItem(at: bundlePath, to: documentDirectoryUrl)
+            return documentDirectoryUrl
         } else {
             throw CodableFilesError.fileInBundleNotFound
         }
