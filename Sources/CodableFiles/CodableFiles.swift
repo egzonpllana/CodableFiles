@@ -113,7 +113,7 @@ public extension CodableFiles {
 
         // Write data to file url.
         let data = try JSONSerialization.data(withJSONObject: objectDictionary, options: [.prettyPrinted])
-        try data.write(to: fileURL, options: [.atomicWrite])
+        try data.write(to: fileURL, options: [.atomic])
         return fileURL
     }
 
@@ -150,7 +150,7 @@ public extension CodableFiles {
 
         // Write data to file url.
         let data = try JSONSerialization.data(withJSONObject: objectDictionary, options: [.prettyPrinted])
-        try data.write(to: fileURL, options: [.atomicWrite])
+        try data.write(to: fileURL, options: [.atomic])
         return fileURL
     }
 
