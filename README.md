@@ -65,7 +65,7 @@ let loadedObjects = try? codableFiles.loadAsArray(objectType: User.self, withFil
 
 Load Codable object from a file that is inside app bundle.
 ```swift
-let loadedObject = try codableFiles.load(objectType: User.self, fileName: "userModel")
+let loadedObject = try? codableFiles.load(objectType: User.self, fileName: "userModel")
 ```
 
 Delete a file from default directory.
@@ -91,6 +91,20 @@ try? codableFiles.deleteDirectory(directoryName: "directoryName")
 Copy a file with given name from Bundle to default documents directory.
 ```swift
 let savedPath = try? codableFiles.copyFileFromBundle(fileName: "user")
+```
+
+Check if a file with given name exists in documents directory.
+```swift
+let isExistingFile = try codableFiles.isInDocumentsDirectory(fileName: "userModel")
+```
+
+An example with recommended way to run the methods with do-catch pattern.
+```swift
+do {
+    let savedPath = try codableFiles.copyFileFromBundle(fileName: "user")
+} catch {
+    print("CodableFiles - Error: \(error.localizedDescription)")
+}
 ```
 
 ### App bundle

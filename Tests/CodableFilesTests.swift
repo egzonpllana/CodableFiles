@@ -114,7 +114,7 @@ class CodableFilesTests: XCTestCase {
     /// are saved in a default directory.
     func testSavedFileAreInDefaultDirectory() throws {
         let savedPathURL = try sut.save(object: userModel, withFilename: SL.fileName.rawValue)
-        XCTAssertTrue(savedPathURL!.pathComponents.contains(sut.defaultDirectoryName))
+        XCTAssertTrue(savedPathURL.pathComponents.contains(sut.defaultDirectoryName))
     }
 
     /// Change default directory name.
@@ -192,6 +192,31 @@ class CodableFilesTests: XCTestCase {
         let savedPathURL = try sut.copyFileFromBundle(bundle: testBundle, fileName: fileName, toDirectory: SL.testsDirectory.rawValue)
         // Check if file is copied.
         XCTAssertNotNil(savedPathURL)
+    }
+
+
+    /// Test if copied file in Documents Directory exists.
+    func testExistingFileInDocumentsDirectory() throws {
+        // Filename.
+        let fileName = SL.userJSONFileName.rawValue
+        // Test bundle.
+        let testBundle = Bundle(for: type(of: self))
+        // Copy file.
+        let _ = try sut.copyFileFromBundle(bundle: testBundle, fileName: fileName)
+        // Read file existing status.
+        let isFileExisting = try sut.isInDocumentsDirectory(fileName: fileName)
+        // Check if file exists.
+        XCTAssertTrue(isFileExisting)
+    }
+
+    /// Test if not copied file in Documents Directory exists.
+    func testNotExistingFileInDocumentsDirectory() throws {
+        // Filename.
+        let fileName = SL.userJSONFileName.rawValue
+        // Read file existing status.
+        let isFileExisting = try sut.isInDocumentsDirectory(fileName: fileName)
+        // Check if file does not exists.
+        XCTAssertFalse(isFileExisting)
     }
 
     /// Test debugDescription for CodableFiles error enumeration.
