@@ -194,6 +194,31 @@ class CodableFilesTests: XCTestCase {
         XCTAssertNotNil(savedPathURL)
     }
 
+
+    /// Test if copied file in Documents Directory exists.
+    func testExistingFileInDocumentsDirectory() throws {
+        // Filename.
+        let fileName = SL.userJSONFileName.rawValue
+        // Test bundle.
+        let testBundle = Bundle(for: type(of: self))
+        // Copy file.
+        let _ = try sut.copyFileFromBundle(bundle: testBundle, fileName: fileName)
+        // Read file existing status.
+        let isFileExisting = try sut.isInDocumentsDirectory(fileName: fileName)
+        // Check if file exists.
+        XCTAssertTrue(isFileExisting)
+    }
+
+    /// Test if not copied file in Documents Directory exists.
+    func testNotExistingFileInDocumentsDirectory() throws {
+        // Filename.
+        let fileName = SL.userJSONFileName.rawValue
+        // Read file existing status.
+        let isFileExisting = try sut.isInDocumentsDirectory(fileName: fileName)
+        // Check if file does not exists.
+        XCTAssertFalse(isFileExisting)
+    }
+
     /// Test debugDescription for CodableFiles error enumeration.
     func testCFErrordebugDescription() {
         let directoryNotFound = CodableFilesError.directoryNotFound
