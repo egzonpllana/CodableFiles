@@ -114,7 +114,7 @@ class CodableFilesTests: XCTestCase {
     /// are saved in a default directory.
     func testSavedFileAreInDefaultDirectory() throws {
         let savedPathURL = try sut.save(object: userModel, withFilename: SL.fileName.rawValue)
-        XCTAssertTrue(savedPathURL!.pathComponents.contains(sut.defaultDirectoryName))
+        XCTAssertTrue(savedPathURL.pathComponents.contains(sut.defaultDirectoryName))
     }
 
     /// Change default directory name.

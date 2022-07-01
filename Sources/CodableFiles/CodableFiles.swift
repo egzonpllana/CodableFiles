@@ -85,8 +85,8 @@ public extension CodableFiles {
     ///   - object: Encodable object.
     ///   - filename: File name to save objects data.
     ///   - directory: Directory to save the object.
-    /// - Returns: Returns an optional directory URL where file data is saved.
-    func save(object: Encodable, withFilename filename: String, atDirectory directory: String?=nil) throws -> URL? {
+    /// - Returns: Returns an directory URL where file data is saved.
+    func save(object: Encodable, withFilename filename: String, atDirectory directory: String?=nil) throws -> URL {
         // Convert object to dictionary string
         let objectDictionary = try object.toDictionary()
 
@@ -122,8 +122,8 @@ public extension CodableFiles {
     ///   - objects: Encodable objects.
     ///   - filename: File name to save objects data.
     ///   - directory: directory to save the object.
-    /// - Returns: Returns an optional directory URL where file data is saved.
-    func saveAsArray(objects: [Encodable], withFilename filename: String, atDirectory directory: String?=nil) throws -> URL? {
+    /// - Returns: Returns an directory URL where file data is saved.
+    func saveAsArray(objects: [Encodable], withFilename filename: String, atDirectory directory: String?=nil) throws -> URL {
         // Convert object to dictionary string.
         let objectDictionary = try objects.map { try $0.toDictionary() }
 
@@ -159,8 +159,8 @@ public extension CodableFiles {
     ///   - objectType: Decodable object.
     ///   - filename: Object name.
     ///   - directory: Directory to load the object from.
-    /// - Returns: Returns optional Decodable object.
-    func load<T: Decodable>(objectType type: T.Type, withFilename filename: String, atDirectory directory: String?=nil) throws -> T? {
+    /// - Returns: Returns Decodable object.
+    func load<T: Decodable>(objectType type: T.Type, withFilename filename: String, atDirectory directory: String?=nil) throws -> T {
         // Get default document directory path url.
         var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
@@ -196,8 +196,8 @@ public extension CodableFiles {
     ///   - objectType: Decodable object.
     ///   - filename: Object name.
     ///   - directory: Directory to load data from.
-    /// - Returns: Returns optional Decodable object.
-    func loadAsArray<T: Decodable>(objectType type: T.Type, withFilename filename: String, atDirectory directory: String?=nil) throws -> [T?] {
+    /// - Returns: Returns Decodable object.
+    func loadAsArray<T: Decodable>(objectType type: T.Type, withFilename filename: String, atDirectory directory: String?=nil) throws -> [T] {
         // Get default document directory path url.
         var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
 
@@ -232,8 +232,8 @@ public extension CodableFiles {
     /// - Parameters:
     ///   - objectType: Decodable object.
     ///   - atPath: Path url to load the object from, ex. ".../user.json".
-    /// - Returns: Returns optional Decodable object.
-    func load<T: Decodable>(fromBundle bundle: Bundle?=Bundle.main, objectType type: T.Type, fileName: String) throws -> T? {
+    /// - Returns: Returns Decodable object.
+    func load<T: Decodable>(fromBundle bundle: Bundle?=Bundle.main, objectType type: T.Type, fileName: String) throws -> T {
         if let bundlePath = bundle?.url(forResource: fileName, withExtension: SL.json.rawValue) {
 
             // Get data from path url.
@@ -259,8 +259,8 @@ public extension CodableFiles {
     /// - Parameters:
     ///   - objectType: Decodable object.
     ///   - atPath: Path url to load the objects from, ex. ".../users.json".
-    /// - Returns: Returns array of optional Decodable objects.
-    func loadAsArray<T: Decodable>(fromBundle bundle: Bundle?=Bundle.main, objectType type: T.Type, fileName: String) throws -> [T?] {
+    /// - Returns: Returns array of Decodable objects.
+    func loadAsArray<T: Decodable>(fromBundle bundle: Bundle?=Bundle.main, objectType type: T.Type, fileName: String) throws -> [T] {
         if let bundlePath = bundle?.url(forResource: fileName, withExtension: SL.json.rawValue) {
             // Get data from path url.
             let contentData = try Data(contentsOf: bundlePath)
@@ -333,7 +333,7 @@ public extension CodableFiles {
     ///   - bundle: Bundle to copy files from.
     ///   - fileName: File name to copy.
     ///   - directory: Directory to save file to.
-    func copyFileFromBundle(bundle: Bundle?=Bundle.main, fileName: String, toDirectory directory: String?=nil) throws -> URL? {
+    func copyFileFromBundle(bundle: Bundle?=Bundle.main, fileName: String, toDirectory directory: String?=nil) throws -> URL {
         if let bundlePath = bundle?.url(forResource: fileName, withExtension: SL.json.rawValue) {
             // Get default document directory path url.
             var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
