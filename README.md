@@ -93,6 +93,11 @@ Copy a file with given name from Bundle to default documents directory.
 let savedPath = try? codableFiles.copyFileFromBundle(fileName: "user")
 ```
 
+Check if a file with given name exists in documents directory.
+```swift
+let isExistingFile = try codableFiles.isInDocumentsDirectory(fileName: "userModel")
+```
+
 An example with recommended way to run the methods with do-catch pattern.
 ```swift
 do {
