@@ -370,6 +370,25 @@ public extension CodableFiles {
         }
     }
 
+    /// Check if file exists in documents directory
+    /// - Parameter fileName: file name to look for.
+    /// - Returns: boolean value.
+    func isInDocumentsDirectory(fileName: String) throws -> Bool {
+        // Get default document directory path url.
+        var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+
+        // Check if its needed to append the new directory name.
+        let defaultDirectoryUrl = documentDirectoryUrl.appendingPathComponent(defaultDirectory)
+        documentDirectoryUrl = defaultDirectoryUrl
+
+        // Append file name
+        let fileName = fileName + SL.dot.rawValue + SL.json.rawValue
+        documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(fileName)
+
+        // Replace file if already exists
+        return fileManager.fileExists(atPath: documentDirectoryUrl.path)
+    }
+
     /// Change default directory name to a new one.
     /// - Parameter directoryName: Directory name to save and load objects.
     func setDefaultDirectoryName(directoryName: String) {
