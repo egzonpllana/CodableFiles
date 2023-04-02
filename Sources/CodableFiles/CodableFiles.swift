@@ -176,7 +176,7 @@ public extension CodableFiles {
         }
 
         // Append the file name and extension to the directory path
-        let fileURL = documentDirectoryUrl.appendingPathComponent(fileName).appendingPathExtension("json")
+        let fileURL = documentDirectoryUrl.appendingPathComponent(fileName).appendingPathExtension(.jsonExtension)
 
         // Delete the file if it already exists
         if fileManager.fileExists(atPath: fileURL.path) {
