@@ -34,20 +34,6 @@ private extension String {
     static let myAppDirectory = "MyAppDirectory"
 }
 
-public enum CodableFilesError: Error {
-    case fileInBundleNotFound
-    case fileInDocumentsDirNotFound
-    case failedToGetDocumentsDirectory
-
-    var debugDescription: String {
-        switch self {
-        case .fileInBundleNotFound: return "File with given name not found in the current Bundle."
-        case .fileInDocumentsDirNotFound: return "File with given name not found in Documents directory."
-        case .failedToGetDocumentsDirectory: return "Failed to get documents directory full path URL."
-        }
-    }
-}
-
 public enum CodableFilesDirectory {
     case defaultDirectory
     case directoryName(_ name: String)
@@ -151,6 +137,30 @@ public extension CodableFiles {
         let fileURL = documentDirectoryUrl.appendingPathComponent(fileName + ".json")
 
         // Delete the
+        try fileManager.removeItem(at: fileURL)
+    }
+
+    /// Deletes a directory at the given path, or the default document directory if no path is provided.
+    ///
+    /// - Parameter directoryName: The name of the directory to delete, or nil to delete the default directory.
+    /// - Throws: An error of type `CodableFilesError.directoryNotFound` if the directory to be deleted does not exist, or any other error thrown by `FileManager`.
+    func deleteDirectory(directoryName name: String? = nil) throws {
+        // Get default document directory path
+        var documentDirectoryUrl = try fileManager.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false)
+
+        // Check if we should delete specific directory
+        if let path = name {
+            documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(path)
+        } else {
+            documentDirectoryUrl = documentDirectoryUrl.appendingPathComponent(writeDirectory)
+        }
+
+        // Check if the directory to be deleted already exists
+        if fileManager.fileExists(atPath: documentDirectoryUrl.path) {
+            try fileManager.removeItem(atPath: documentDirectoryUrl.path)
+        } else {
+            throw CodableFilesError.directoryNotFound
+        }
     }
 
     /// Copies a file from the app bundle to a specified directory.
@@ -167,7 +177,7 @@ public extension CodableFiles {
         }
 
         // Get the full path of the specified directory
-        guard var documentDirectoryUrl = getDirectoryFullPath(directory) else {
+        guard let documentDirectoryUrl = getDirectoryFullPath(directory) else {
             throw CodableFilesError.failedToGetDocumentsDirectory
         }
 
@@ -270,20 +280,4 @@ private extension CodableFiles {
         }
     }
 
-}
-
-// MARK: - Optional extensions
-
-private extension Optional {
-    /// Unwraps an optional value and returns it, or throws an error if the value is nil.
-    /// - Parameters:
-    ///   - error: The error to throw if the value is nil.
-    /// - Returns: The unwrapped value.
-    /// - Throws: The specified error if the value is nil.
-    func unwrap(orThrow error: Error) throws -> Wrapped {
-        guard let unwrapped = self else {
-            throw error
-        }
-        return unwrapped
-    }
 }

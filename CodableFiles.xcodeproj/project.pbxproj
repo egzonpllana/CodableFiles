@@ -16,6 +16,8 @@
 		52A3EDC72783094C003B91E8 /* CodableFilesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A3EDC62783094C003B91E8 /* CodableFilesTests.swift */; };
 		52A3EDCA27830963003B91E8 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A3EDC927830963003B91E8 /* UserModel.swift */; };
 		52A3EDCD27830979003B91E8 /* User.json in Resources */ = {isa = PBXBuildFile; fileRef = 52A3EDCC27830979003B91E8 /* User.json */; };
+		52D0935229D9F49D00845E1B /* CodableFilesError.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D0935129D9F49D00845E1B /* CodableFilesError.swift */; };
+		52D0935429D9F4D200845E1B /* Optional+extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52D0935329D9F4D200845E1B /* Optional+extensions.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -39,6 +41,8 @@
 		52A3EDC62783094C003B91E8 /* CodableFilesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodableFilesTests.swift; sourceTree = "<group>"; };
 		52A3EDC927830963003B91E8 /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
 		52A3EDCC27830979003B91E8 /* User.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = User.json; sourceTree = "<group>"; };
+		52D0935129D9F49D00845E1B /* CodableFilesError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CodableFilesError.swift; sourceTree = "<group>"; };
+		52D0935329D9F4D200845E1B /* Optional+extensions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Optional+extensions.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -102,7 +106,9 @@
 			isa = PBXGroup;
 			children = (
 				52A3EDC3278308EA003B91E8 /* CodableFiles.swift */,
+				52D0935129D9F49D00845E1B /* CodableFilesError.swift */,
 				52A3EDC2278308EA003B91E8 /* Encodable+toDictionary.swift */,
+				52D0935329D9F4D200845E1B /* Optional+extensions.swift */,
 			);
 			path = CodableFiles;
 			sourceTree = "<group>";
@@ -239,6 +245,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				52A3EDC5278308EA003B91E8 /* CodableFiles.swift in Sources */,
+				52D0935429D9F4D200845E1B /* Optional+extensions.swift in Sources */,
+				52D0935229D9F49D00845E1B /* CodableFilesError.swift in Sources */,
 				52A3EDC4278308EA003B91E8 /* Encodable+toDictionary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
