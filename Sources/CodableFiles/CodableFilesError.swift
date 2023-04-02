@@ -12,6 +12,7 @@ public enum CodableFilesError: Error {
     case fileInDocumentsDirNotFound
     case failedToGetDocumentsDirectory
     case directoryNotFound
+    case fileNotFound
 
     var debugDescription: String {
         switch self {
@@ -19,6 +20,7 @@ public enum CodableFilesError: Error {
         case .fileInDocumentsDirNotFound: return "File with given name not found in Documents directory."
         case .failedToGetDocumentsDirectory: return "Failed to get documents directory full path URL."
         case .directoryNotFound: return "Provided directory name not found."
+        case .fileNotFound: return "File not found."
         }
     }
 }
