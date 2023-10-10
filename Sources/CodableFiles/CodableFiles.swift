@@ -107,18 +107,12 @@ public extension CodableFiles {
     /// - Throws: `CodableFilesError.failedToGetDocumentsDirectory` if the documents directory cannot be found or created, `CodableFilesError.fileInBundleNotFound` if the file is not found in the app bundle, or any other errors encountered during file loading or decoding.
     func load<T: Decodable>(withFilename filename: String, atDirectory directory: CodableFilesDirectory? = .defaultDirectory) throws -> T {
         // Copy the file from the app bundle to the documents directory if needed.
-        try copyFromBundleIfNeeded(fileName: filename)
-
-        // Get the URL of the specified directory in the documents directory.
-        let documentDirectoryUrl = try getDirectoryFullPath(directory ?? .defaultDirectory).unwrap(orThrow: CodableFilesError.failedToGetDocumentsDirectory)
-
-        // Get the URL of the file to be loaded.
-        let fileURL = documentDirectoryUrl
-            .appendingPathComponent(filename)
-            .appendingPathExtension(.jsonExtension)
+        guard let filePathURL = try copyFromBundleIfNeeded(fileName: filename) else {
+            throw CodableFilesError.fileNotFound
+        }
 
         // Load the JSON data from the file and decode it to the desired type.
-        let contentData = try Data(contentsOf: fileURL)
+        let contentData = try Data(contentsOf: filePathURL)
         return try JSONDecoder().decode(T.self, from: contentData)
     }
 
@@ -160,12 +154,12 @@ public extension CodableFiles {
     /// - Throws: `CodableFilesError` if the operation fails for any reason.
     /// - Returns: The URL of the copied file.
     func copyFileFromBundle(bundle: Bundle, fileName: String, toDirectory directory: CodableFilesDirectory? = .defaultDirectory) throws -> URL {
-        // Check if the file exists in the bundle
+        // generate file path with bundle
         guard let bundlePath = bundle.url(forResource: fileName, withExtension: .jsonExtension) else {
             throw CodableFilesError.fileInBundleNotFound
         }
 
-        // Get the full path of the specified directory
+        // generate file path with documents directory
         guard let documentDirectoryUrl = getDirectoryFullPath(directory ?? .defaultDirectory) else {
             throw CodableFilesError.failedToGetDocumentsDirectory
         }
@@ -256,13 +250,12 @@ private extension CodableFiles {
     /// This method copies a file from the app bundle to the default directory if the file does not exist there already.
     /// - Parameter fileName: The name of the file to copy.
     /// - Throws: An error if the file cannot be copied.
-    private func copyFromBundleIfNeeded(fileName: String, toDirectory directory: CodableFilesDirectory? = .defaultDirectory) throws {
-        // Check if the file already exists in the documents directory.
-        if (try getFilePath(forFileName: fileName, fromDirectory: directory) == nil) {
-            // Get the app bundle and copy the file to the default directory.
-            let bundle = Bundle(for: type(of: self))
-            _ = try copyFileFromBundle(bundle: bundle, fileName: fileName, toDirectory: directory)
+    private func copyFromBundleIfNeeded(fileName: String, toDirectory directory: CodableFilesDirectory? = .defaultDirectory) throws -> URL? {
+        if let existingFilePath = try getFilePath(forFileName: fileName, fromDirectory: directory) {
+            return existingFilePath
+        } else {
+            let url = try copyFileFromBundle(bundle: bundle, fileName: fileName, toDirectory: directory)
+            return url
         }
     }
-
 }
