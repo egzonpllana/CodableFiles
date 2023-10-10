@@ -27,14 +27,14 @@ import XCTest
 import CodableFiles
 
 // Enum for String literals
-private enum SL: String {
-    case testsDirectory = "TestsDirectory"
-    case anotherTestsDirectory = "AnotherTestsDirectory"
-    case bundleNameKey = "CFBundleName"
-    case fileName = "userModel"
-    case userJSONFileName = "User"
-    case usersArrayJSONFileName = "UsersArray"
-    case json = "json"
+private extension String {
+    static let testsDirectory = "TestsDirectory"
+    static let anotherTestsDirectory = "AnotherTestsDirectory"
+    static let bundleNameKey = "CFBundleName"
+    static let fileName = "userModel"
+    static let userJSONFileName = "User"
+    static let usersArrayJSONFileName = "UsersArray"
+    static let json = "json"
 }
 
 // User object with dummy data to be used for testing purpose.
@@ -48,26 +48,25 @@ class CodableFilesTests: XCTestCase {
     // MARK: - Properties
 
     private var sut: CodableFiles!
+    private let testsDirectory = CodableFilesDirectory.directoryName(.testsDirectory)
+    private let anotherTestsDirectory = CodableFilesDirectory.directoryName(.anotherTestsDirectory)
 
     // MARK: - Test life cycle
 
     override func setUp() {
         super.setUp()
-        // This method is called before the invocation of each test method in the class.
-
-        // Create CodableFiles object
+        // init
         sut = CodableFiles.shared
+        sut.setBundle(Bundle(for: type(of: self)))
     }
 
     override func tearDown() {
-        // This method is called after the invocation of each test method in the class.
-
-        // Delete created directories during tests
+        // delete created directories during tests
         try? sut.deleteDirectory()
-        try? sut.deleteDirectory(directoryName: SL.testsDirectory.rawValue)
-        try? sut.deleteDirectory(directoryName: SL.anotherTestsDirectory.rawValue)
+        try? sut.deleteDirectory(directoryName: testsDirectory)
+        try? sut.deleteDirectory(directoryName: anotherTestsDirectory)
 
-        // Reset CodableFiles
+        // rest
         sut = nil
 
         super.tearDown()
@@ -75,10 +74,20 @@ class CodableFilesTests: XCTestCase {
 
     // MARK: - Tests
 
-    /// Test initialization shared instance.
-    func testInitialization() {
+    func test_initialization_success() {
         let codableFiles = CodableFiles.shared
         XCTAssertNotNil(codableFiles)
     }
 
+    func test_load_single_file_success() throws {
+        // given
+        let fileName: String = .userJSONFileName
+        let directory = testsDirectory
+
+        // when
+        let user: User = try sut.load(withFilename: fileName, atDirectory: directory)
+
+        // then
+        XCTAssertNotNil(user)
+    }
 }
