@@ -28,3 +28,9 @@ struct User: Codable {
     let firstName: String
     let lastName: String
 }
+
+extension User {
+    static func fake() -> Self {
+        .init(firstName: "First name", lastName: "LastName")
+    }
+}

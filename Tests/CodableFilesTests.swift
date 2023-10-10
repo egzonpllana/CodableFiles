@@ -79,13 +79,101 @@ class CodableFilesTests: XCTestCase {
         XCTAssertNotNil(codableFiles)
     }
 
-    func test_load_single_file_success() throws {
+    func test_load_single_dto_success() throws {
         // given
         let fileName: String = .userJSONFileName
         let directory = testsDirectory
 
         // when
         let user: User = try sut.load(withFilename: fileName, atDirectory: directory)
+
+        // then
+        XCTAssertNotNil(user)
+    }
+
+    func test_load_array_of_dto_success() throws {
+        // given
+        let fileName: String = .usersArrayJSONFileName
+        let directory = testsDirectory
+
+        // when
+        let users: [User] = try sut.load(withFilename: fileName, atDirectory: directory)
+
+        // then
+        XCTAssertNotNil(users)
+    }
+
+    func test_save_single_dto_success() throws {
+        // given
+        let userFileName: String = .userJSONFileName
+        let user: User = .fake()
+
+        // when
+        try sut.save(user, withFilename: userFileName)
+
+        // then
+    }
+
+    func test_save_multiple_dtos_success() throws {
+        // given
+        let usersFileName: String = .usersArrayJSONFileName
+        let directory = testsDirectory
+
+        // when
+        let users: [User] = try sut.load(withFilename: usersFileName, atDirectory: directory)
+
+        // then
+        XCTAssertNotEqual(users.count, 0)
+
+        // given
+        let userFileName: String = .userJSONFileName
+
+        // when
+        try sut.save(users, withFilename: userFileName)
+
+        // then
+    }
+
+    func test_delete_file_success() throws {
+        // given
+        let fileName: String = .userJSONFileName
+        let user: User = .fake()
+
+        // when
+        try sut.save(user, withFilename: fileName)
+
+        // when
+        try sut.deleteFile(withFileName: fileName)
+
+        // when
+        let isInDirectory = try sut.isInDirectory(fileName: fileName)
+
+        // then
+        XCTAssertFalse(isInDirectory)
+    }
+
+    func test_delete_directory_success() throws {
+        // given
+        let userFileName: String = .userJSONFileName
+        let user: User = .fake()
+
+        // when
+        try sut.save(user, withFilename: userFileName)
+
+        // then
+        try sut.deleteDirectory()
+    }
+
+    func test_copy_file_from_bundle_success() throws {
+        // given
+        let fileName: String = .userJSONFileName
+        let bundle = Bundle(for: type(of: self))
+
+        // when
+        try sut.copyFileFromBundle(bundle: bundle, fileName: fileName)
+
+        // when
+        let user: User = try sut.load(withFilename: fileName)
 
         // then
         XCTAssertNotNil(user)
