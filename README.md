@@ -22,16 +22,19 @@ Welcome to **CodableFiles**, a simple library that provides an easier way to sav
 - [X] Modern, object-oriented API for accessing, reading and writing files.
 - [X] Unified, simple `do, try, catch` error handling.
 - [X] Easily to find and interact with saved files.
-- [X] Unit test coverage over 95%.
+- [X] Unit test coverage over 75%.
 
 ## Examples
 
-Codable object
+Codable object and constants for example purposes.
 ```swift
 struct User: Codable {
     let name: String
     let lastName: String
 }
+let user = User(name: "First name", lastName: "Last name")
+let users = [user]
+let fileName = "Users"
 ```
 
 CodableFiles shared reference.
@@ -40,42 +43,24 @@ CodableFiles shared reference.
 let codableFiles = CodableFiles.shared
 ```
 
-Save Codable object in default directory.
+Save object in default directory.
 ```swift
-let user = User(name: "First name", lastName: "Last name")
-let savePath = try? codableFiles.save(object: user, withFilename: "userModel")
+try? codableFiles.save(user, withFilename: userFileName)
 ```
 
-Load Codable object from default directory.
+Load object from default directory.
 ```swift
-let loadedObject = try? codableFiles.load(objectType: User.self, withFilename: "userModel")
+let user: User = try? codableFiles.load(withFilename: fileName)
 ```
 
-Save array of Codable objects in default directory.
+Load array of objects from default directory.
 ```swift
-let user = User(name: "First name", lastName: "Last name")
-let anotherUser = User(name: "Another first name", lastName: "Another last name")
-let savePath = try? codableFiles.saveAsArray(objects: [user, anotherUser], withFilename: "usersArray")
+let user: [User] = try? codableFiles.load(withFilename: fileName)
 ```
 
-Load array of Codable objects from default directory.
+Delete a file.
 ```swift
-let loadedObjects = try? codableFiles.loadAsArray(objectType: User.self, withFilename: "usersArray")
-```
-
-Load Codable object from a file that is inside app bundle.
-```swift
-let loadedObject = try? codableFiles.load(objectType: User.self, fileName: "userModel")
-```
-
-Delete a file from default directory.
-```swift
-try? codableFiles.deleteFile(withFileName: "userModel")
-```
-
-Delete a file from given directory.
-```swift
-try? codableFiles.deleteFile(withFileName: "userModel", atDirectory: "directoryName")
+try? codableFiles.deleteFile(withFileName: fileName)
 ```
 
 Delete default directory.
@@ -85,23 +70,19 @@ try? codableFiles.deleteDirectory()
 
 Delete a directory.
 ```swift
-try? codableFiles.deleteDirectory(directoryName: "directoryName")
+try? codableFiles.deleteDirectory(directoryName: "CFFolder")
 ```
 
 Copy a file with given name from Bundle to default documents directory.
 ```swift
-let savedPath = try? codableFiles.copyFileFromBundle(fileName: "user")
-```
-
-Check if a file with given name exists in documents directory.
-```swift
-let isExistingFile = try codableFiles.isInDocumentsDirectory(fileName: "userModel")
+let bundle = Bundle(for: type(of: self))
+let pathURL = try codableFiles.copyFileFromBundle(bundle: bundle, fileName: fileName)
 ```
 
 An example with recommended way to run the methods with do-catch pattern.
 ```swift
 do {
-    let savedPath = try codableFiles.copyFileFromBundle(fileName: "user")
+    let savedPath = try codableFiles.copyFileFromBundle(fileName: fileName)
 } catch {
     print("CodableFiles - Error: \(error.localizedDescription)")
 }
