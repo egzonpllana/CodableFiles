@@ -51,6 +51,7 @@ public final class CodableFiles {
     /// Private properties
     private var fileManager: FileManager
     private var writeDirectory: String
+    private lazy var bundle: Bundle = Bundle(for: type(of: self))
 
     // MARK: - Initialization
 
@@ -219,6 +220,10 @@ public extension CodableFiles {
     /// - Parameter directoryName: The name of the directory to use.
     func setDefaultDirectoryName(directoryName: String) {
         writeDirectory = directoryName
+    }
+
+    func setBundle(_ bundle: Bundle) {
+        self.bundle = bundle
     }
 }
 
