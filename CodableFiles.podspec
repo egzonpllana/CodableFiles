@@ -1,6 +1,6 @@
 Pod::Spec.new do |s|
   s.name             = 'CodableFiles'
-  s.version          = '1.0.2'
+  s.version          = '1.1.0'
   s.summary          = 'Save and load Codable objects from DocumentDirectory on iOS Devices.'
   s.homepage         = 'https://github.com/egzonpllana/CodableFiles'
   s.license          = { :type => 'MIT', :file => 'LICENSE.md' }
