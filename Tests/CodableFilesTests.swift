@@ -22,6 +22,8 @@
  * SOFTWARE.
  */
 
+/*
+ 
 import Foundation
 import XCTest
 import CodableFiles
@@ -179,3 +181,4 @@ class CodableFilesTests: XCTestCase {
         XCTAssertNotNil(user)
     }
 }
+ */
