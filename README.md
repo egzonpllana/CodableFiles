@@ -55,7 +55,7 @@ let user: User = try? codableFiles.load(withFilename: fileName)
 
 Load array of objects from default directory.
 ```swift
-let user: [User] = try? codableFiles.load(withFilename: fileName)
+let users: [User] = try? codableFiles.load(withFilename: fileName)
 ```
 
 Delete a file.
