@@ -73,12 +73,13 @@ public extension CodableFiles {
     ///
     /// - Parameters:
     ///   - object: The encodable object to save.
+    ///   - encoder: An object that encodes instances of a data type as JSON objects.
     ///   - filename: The name of the file to create.
     ///   - directory: The directory in which to create the file.
     /// - Returns: The URL of the saved file.
     /// - Throws: `CodableFilesError.failedToGetDocumentsDirectory` if the documents directory cannot be found or created, or any other errors encountered during file saving.
     @discardableResult
-    func save<T: Encodable>(_ object: T, withFilename filename: String, atDirectory directory: CodableFilesDirectory = .defaultDirectory) throws -> URL {
+    func save<T: Encodable>(_ object: T, encoder: JSONEncoder = .init(), withFilename filename: String, atDirectory directory: CodableFilesDirectory = .defaultDirectory) throws -> URL {
         // Get the URL of the specified directory in the documents directory.
         let documentDirectoryUrl = try getDirectoryFullPath(directory).unwrap(orThrow: CodableFilesError.failedToGetDocumentsDirectory)
 
@@ -93,9 +94,8 @@ public extension CodableFiles {
         }
         
         // Encode the object to JSON data and save it to the file.
-        let data = try JSONEncoder().encode(object)
+        let data = try encoder.encode(object)
         try data.write(to: fileURL, options: [.atomicWrite])
-
         return fileURL
     }
 
@@ -103,10 +103,11 @@ public extension CodableFiles {
     ///
     /// - Parameters:
     ///   - filename: The name of the file to load.
+    ///   - decoder: An object that decodes instances of a data type from JSON objects.
     ///   - directory: The directory in which the file is located.
     /// - Returns: The decodable object loaded from the file.
     /// - Throws: `CodableFilesError.failedToGetDocumentsDirectory` if the documents directory cannot be found or created, `CodableFilesError.fileInBundleNotFound` if the file is not found in the app bundle, or any other errors encountered during file loading or decoding.
-    func load<T: Decodable>(withFilename filename: String, atDirectory directory: CodableFilesDirectory = .defaultDirectory) throws -> T {
+    func load<T: Decodable>(withFilename filename: String, decoder: JSONDecoder = .init(), atDirectory directory: CodableFilesDirectory = .defaultDirectory) throws -> T {
         // Copy the file from the app bundle to the documents directory if needed.
         guard let filePathURL = try copyFromBundleIfNeeded(fileName: filename, toDirectory: directory) else {
             throw CodableFilesError.fileNotFound
@@ -114,7 +115,7 @@ public extension CodableFiles {
 
         // Load the JSON data from the file and decode it to the desired type.
         let contentData = try Data(contentsOf: filePathURL)
-        return try JSONDecoder().decode(T.self, from: contentData)
+        return try decoder.decode(T.self, from: contentData)
     }
 
     /// Deletes a file with the specified name in the specified directory.
