@@ -11,7 +11,6 @@
 		528A431D2782499F007E303B /* README.md in Resources */ = {isa = PBXBuildFile; fileRef = 528A43152782499F007E303B /* README.md */; };
 		528A432327824B6B007E303B /* CodableFiles.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 528A432227824B6B007E303B /* CodableFiles.podspec */; };
 		528A432E27824C6A007E303B /* CodableFiles.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 528A43082782494C007E303B /* CodableFiles.framework */; };
-		52A3EDC4278308EA003B91E8 /* Encodable+toDictionary.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A3EDC2278308EA003B91E8 /* Encodable+toDictionary.swift */; };
 		52A3EDC5278308EA003B91E8 /* CodableFiles.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A3EDC3278308EA003B91E8 /* CodableFiles.swift */; };
 		52A3EDC72783094C003B91E8 /* CodableFilesTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A3EDC62783094C003B91E8 /* CodableFilesTests.swift */; };
 		52A3EDCA27830963003B91E8 /* UserModel.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52A3EDC927830963003B91E8 /* UserModel.swift */; };
@@ -36,7 +35,6 @@
 		528A43152782499F007E303B /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = "<group>"; };
 		528A432227824B6B007E303B /* CodableFiles.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = CodableFiles.podspec; sourceTree = "<group>"; };
 		528A432A27824C6A007E303B /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
-		52A3EDC2278308EA003B91E8 /* Encodable+toDictionary.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "Encodable+toDictionary.swift"; sourceTree = "<group>"; };
 		52A3EDC3278308EA003B91E8 /* CodableFiles.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodableFiles.swift; sourceTree = "<group>"; };
 		52A3EDC62783094C003B91E8 /* CodableFilesTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CodableFilesTests.swift; sourceTree = "<group>"; };
 		52A3EDC927830963003B91E8 /* UserModel.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = UserModel.swift; sourceTree = "<group>"; };
@@ -107,7 +105,6 @@
 			children = (
 				52A3EDC3278308EA003B91E8 /* CodableFiles.swift */,
 				52D0935129D9F49D00845E1B /* CodableFilesError.swift */,
-				52A3EDC2278308EA003B91E8 /* Encodable+toDictionary.swift */,
 				52D0935329D9F4D200845E1B /* Optional+extensions.swift */,
 			);
 			path = CodableFiles;
@@ -247,7 +244,6 @@
 				52A3EDC5278308EA003B91E8 /* CodableFiles.swift in Sources */,
 				52D0935429D9F4D200845E1B /* Optional+extensions.swift in Sources */,
 				52D0935229D9F49D00845E1B /* CodableFilesError.swift in Sources */,
-				52A3EDC4278308EA003B91E8 /* Encodable+toDictionary.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
