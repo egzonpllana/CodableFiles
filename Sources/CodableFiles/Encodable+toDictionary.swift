@@ -28,7 +28,7 @@ extension Encodable {
     /// Convert Encodable object to dictionary
     /// - Parameter encoder: JSONEncoder
     /// - Returns: dictionary [String: Any]
-    func toDictionary(_ encoder: JSONEncoder = JSONEncoder()) throws -> [String: Any] {
+    func toDictionary(encoder: JSONEncoder) throws -> [String: Any] {
         let data = try encoder.encode(self)
         let object = try JSONSerialization.jsonObject(with: data)
         guard let json = object as? [String: Any] else {
